@@ -1,0 +1,7 @@
+<h2>Personal Contacts</h2>
+<% @user.contacts.each do |contact| %>
+  <p><%= contact.recipient.name %></p>
+<% end %>
+
+<h2>Add Contact</h2>
+<%= link_to "Add Contact", add_contact_path(recipient_id: @some_user_id), method: :post %>
