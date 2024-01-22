@@ -1,0 +1,18 @@
+<div class="card post">
+    <div class="card-body">
+        <% if post && post.title %>
+        <div class="card-title">
+            <%= post.title %>
+        </div>
+        <% end %>
+        <div class="card-subtitle mb-2 text-body-secondary">
+        <%= post.creator.email %>
+        </div>
+        <% if post && post.content %>
+        <div class="card-title">
+            <%= post.content %>
+        </div>
+        <% end %>
+        <%= link_to "Read", controller: "posts", action: "show", id: post %>
+    </div>
+</div>

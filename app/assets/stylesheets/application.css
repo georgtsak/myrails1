@@ -13,3 +13,7 @@
  *= require_tree .
  *= require_self
  */
+
+.default-section {
+    padding: 2rem 0
+}

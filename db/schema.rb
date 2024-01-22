@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_22_090200) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_22_113948) do
   create_table "categories", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -25,6 +25,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_090200) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["creator_id"], name: "index_messages_on_creator_id"
+    t.index ["id"], name: "index_messages_on_id", unique: true
     t.index ["recepient_id"], name: "index_messages_on_recepient_id"
   end
 
@@ -36,6 +37,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_090200) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["creator_id"], name: "index_posts_on_creator_id"
+    t.index ["id"], name: "index_posts_on_id", unique: true
   end
 
   create_table "posts_categories", force: :cascade do |t|
@@ -56,6 +58,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_090200) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["id"], name: "index_users_on_id", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
@@ -82,7 +85,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_22_090200) do
 
   add_foreign_key "messages", "creators"
   add_foreign_key "messages", "recepients"
-  add_foreign_key "posts", "creators"
+  add_foreign_key "posts", "users", column: "creator_id"
   add_foreign_key "posts_categories", "categories"
   add_foreign_key "posts_categories", "posts"
   add_foreign_key "users_friends", "initiators"
