@@ -16,6 +16,18 @@ class UsersController < ApplicationController
       render :new
     end
   end
+  def add_contact
+    @user = current_user
+    @contact = @user.contacts.build(recipient_id: params[:recipient_id])
+
+    if @contact.save
+      flash[:success] = "Contact added successfully!"
+    else
+      flash[:error] = "Unable to add contact."
+    end
+
+    redirect_to users_path
+  end
   private
   def user_params
     params.require(:user).permit(:username, :email, :password)
