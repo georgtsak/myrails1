@@ -17,3 +17,21 @@
 .default-section {
     padding: 2rem 0
 }
+
+/* Posts */
+.post {
+    margin-bottom: 15px;
+}
+
+.posts-form .form-control {
+    max-width: 280px;
+}
+
+.posts-form .post-content {
+    max-width: 360px;
+}
+
+.posts-form .select2 {
+    max-width: 360px;
+}
+/* Posts */

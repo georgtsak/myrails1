@@ -9,10 +9,18 @@
         <%= post.creator.email %>
         </div>
         <% if post && post.content %>
-        <div class="card-title">
+        <div class="card-text">
             <%= post.content %>
         </div>
         <% end %>
-        <%= link_to "Read", controller: "posts", action: "show", id: post %>
+        <% if post %>
+            <% tags = PostsCategory.where(post: post).all %>
+            <% if tags %>
+                <% tags.each do |tag| %>
+                    <% current_hashtag = Category.find(tag.id).name %>
+                    <%= link_to current_hashtag, controller: "categories", action: "show", id: current_hashtag %>
+                <% end %>
+            <% end %>
+        <% end %>
     </div>
 </div>

@@ -1,6 +1,6 @@
 <section class="default-section posts">
     <div class="container">
-        <% if @posts %>
+        <% if @posts && @posts.exists? %>
         <div class="row">
         <% @posts.each do |post| %>
             <div class="col-lg-3">

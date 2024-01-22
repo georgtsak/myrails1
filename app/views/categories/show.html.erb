@@ -1,0 +1,14 @@
+<div class="container">
+    <h2>All posts for category <%= params[:id] %></h2>
+    <% if @posts && @posts.exists? %>
+    <div class="row">
+    <% @posts.each do |post| %>
+        <div class="col-lg-3">
+        <%= render partial: 'posts/post', :locals => {:post => post} %>
+        </div>
+        <% end %>
+    </div>
+    <% else %>
+    There are no posts, not yet. Be <a href="/posts/create">the first to create</a>
+    <% end %>
+</div>
