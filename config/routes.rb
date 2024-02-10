@@ -21,4 +21,5 @@ Rails.application.routes.draw do
   get "/messages/:id", to: "messages#show"
   
   get '/contact', to: 'contact#contact'
+  post "/add_contact", to: "contact#create", as: :add_contact
 end
