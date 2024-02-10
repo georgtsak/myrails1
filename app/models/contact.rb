@@ -1,4 +1,6 @@
 class Contact < ApplicationRecord
-  belongs_to :initiator, class_name: 'User'
-  belongs_to :recipient, class_name: 'User'
-end  
+  belongs_to :user
+  belongs_to :friend, class_name: 'User', foreign_key: 'friend_id'
+
+  validates :user_id, uniqueness: { scope: :friend_id }
+end

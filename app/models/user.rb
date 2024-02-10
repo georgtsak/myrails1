@@ -8,4 +8,6 @@ class User < ApplicationRecord
   has_many :messages
   has_many :conversations
   has_many :conversationuser, class_name: 'ConversationUser'
+  has_many :contacts
+  has_many :friends, through: :contacts	
 end
