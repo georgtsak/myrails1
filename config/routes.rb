@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'static_pages/contact'
   devise_for :users
   # Defines the root path route ("/")
   # root "posts#index"
@@ -19,5 +20,5 @@ Rails.application.routes.draw do
   get "/messages/createconv", to: "messages#createconv"
   get "/messages/:id", to: "messages#show"
   
-  get '/contact', to: 'static_pages#contact'
+  get '/contact', to: 'contact#contact'
 end
