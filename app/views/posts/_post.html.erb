@@ -1,0 +1,26 @@
+<div class="card post">
+    <div class="card-body">
+        <% if post && post.title %>
+        <div class="card-title">
+            <%= post.title %>
+        </div>
+        <% end %>
+        <div class="card-subtitle mb-2 text-body-secondary">
+        <%= post.creator.email %>
+        </div>
+        <% if post && post.content %>
+        <div class="card-text">
+            <%= post.content %>
+        </div>
+        <% end %>
+        <% if post %>
+            <% tags = PostsCategory.where(post: post).all %>
+            <% if tags %>
+                <% tags.each do |tag| %>
+                    <% current_hashtag = Category.find(tag.id).name %>
+                    <%= link_to current_hashtag, controller: "categories", action: "show", id: current_hashtag %>
+                <% end %>
+            <% end %>
+        <% end %>
+    </div>
+</div>

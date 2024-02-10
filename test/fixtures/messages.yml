@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id: 1
+  creator: one
+  recepient: one
+  value: MyString
+  createdon: 2024-01-21 17:57:01
+
+two:
+  id: 1
+  creator: two
+  recepient: two
+  value: MyString
+  createdon: 2024-01-21 17:57:01

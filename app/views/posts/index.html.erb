@@ -1,0 +1,15 @@
+<section class="default-section posts">
+    <div class="container">
+        <% if @posts && @posts.exists? %>
+        <div class="row">
+        <% @posts.each do |post| %>
+            <div class="col-lg-3">
+            <%= render partial: 'post', :locals => {:post => post} %>
+            </div>
+        <% end %>
+        </div>
+        <% else %>
+        There are no posts, not yet. Be <a href="/posts/create">the first to create</a>
+        <% end %>
+    </div>
+</div>
