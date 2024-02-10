@@ -1,25 +1,40 @@
 class PostsController < ApplicationController
   def index
-    @title = "Post Profile"
-    @posts = Post.order(createdon: :desc).all()
+    if !user_signed_in?
+      redirect_to '/users/sign_in'
+    else
+      @posts = Post.order(created_on: :desc).all()
+    end
   end
 
   def show
-    @post = Post.find(params[:id]) or not_found
+    if !user_signed_in?
+      redirect_to '/users/sign_in'
+    else
+      @post = Post.find(params[:id]) or not_found
+    end
+  end
+
+  def my
+    if !user_signed_in?
+      redirect_to '/users/sign_in'
+    else
+      @posts = Post.where("creator_id" => current_user.id).all()
+      render index
+    end
   end
 
   def create
     if !user_signed_in?
       redirect_to '/users/sign_in'
-    end
-
+    else
     @user = current_user
     @categories = Category.all()
 
     if request.get?
       
     elsif request.post?
-      @post = Post.new({:title => params[:post][:title], :content => params[:post][:content], :creator => @user, :createdon => Time.now})
+      @post = Post.new({:title => params[:post][:title], :content => params[:post][:content], :creator => @user})
       
       if @post.save
         @message = 'Successfully created!'
@@ -57,6 +72,7 @@ class PostsController < ApplicationController
     else
       raise Exception.new "Unimplemented route"
     end
+  end
   end
 
   def delete

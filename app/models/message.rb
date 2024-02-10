@@ -1,4 +1,4 @@
 class Message < ApplicationRecord
-  belongs_to :creator
-  belongs_to :recepient
+  has_one :users
+  has_one :conversations
 end

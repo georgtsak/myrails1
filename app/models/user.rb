@@ -4,5 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :posts, class_name: 'Post', foreign_key: 'creator_id'
+  has_many :posts
+  has_many :messages
+  has_many :conversations
+  has_many :conversationuser, class_name: 'ConversationUser'
 end
