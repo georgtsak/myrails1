@@ -18,4 +18,6 @@ Rails.application.routes.draw do
   get "/messages", to: "messages#index"
   get "/messages/createconv", to: "messages#createconv"
   get "/messages/:id", to: "messages#show"
+  
+  get '/contact', to: 'static_pages#contact'
 end
