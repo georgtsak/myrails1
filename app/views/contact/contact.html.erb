@@ -1,2 +1,12 @@
-<h1>StaticPages#contact</h1>
-<p>Find me in app/views/static_pages/contact.html.erb</p>
+<h1>Add Contacts</h1>
+
+<%= form_with(model: @contact, local: true) do |form| %>
+  <div class="field">
+    <%= form.label :username %>
+    <%= form.text_field :username %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Add Contact" %>
+  </div>
+<% end %>
