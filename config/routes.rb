@@ -22,4 +22,8 @@ Rails.application.routes.draw do
   
   get '/contact', to: 'contact#contact'
   post "/add_contact", to: "contact#create", as: :add_contact
+	
+  get '/users', to: 'users#index', as: 'users'
+  resources :users, only: [:index, :show]
+  get '/message', to: 'contact#message'
 end
