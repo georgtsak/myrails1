@@ -1,4 +1,8 @@
 <div class="container">
   <h1>Index page</h1>
-  <p>Welcome to the index page</p>
+  <p>Welcome to the index page</p><br>
+  <h4>Already have an account? Login here."</h4>
+  <%= link_to "Login", new_user_session_path, class: "btn btn-primary" %><br><br>
+  <h4>Don't have an account? Sign Up here.</h4>
+  <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-secondary" %>
 </div>
