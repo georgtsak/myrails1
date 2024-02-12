@@ -1,6 +1,9 @@
 <h1>Users</h1>
 <ul>
   <% @users.each do |user| %>
-    <li><%= link_to user.username, user %></li>
+    <li>
+      <%= link_to user.email, user %>
+      <%= link_to "Add Contact", add_contact_path(recepient_id: user.id), method: :post %>
+    </li>
   <% end %>
 </ul>

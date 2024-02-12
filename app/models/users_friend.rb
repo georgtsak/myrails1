@@ -1,4 +1,4 @@
 class UsersFriend < ApplicationRecord
-  belongs_to :initiator
-  belongs_to :recepient
+  belongs_to :initiator, class_name: "User"
+  belongs_to :recipient, class_name: "User"
 end
