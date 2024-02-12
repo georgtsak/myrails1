@@ -1,11 +1,17 @@
 <div class="container">
-  <h1>Messages page</h1>
-  <button class="btn btn-success">New conversation</button>
+  <h1>Conversations page</h1>
+  <button class="btn btn-success mb-2">New conversation</button>
   <% if @elements %>
-  <% @elements.each do |element| %>
-    <div class="col-lg-3">
-    <%= element.id %>
+  <div class="row">
+    <div class="col-lg-6">
+      <ol class="list-group">
+        <% @elements.each do |element| %>
+          <%= render partial: 'conversation', :locals => {:element => element} %>
+        <% end %>
+      </ol>
     </div>
-  <% end %>
+  </div>
+  <% else %>
+  No conversations yet
   <% end %>
 </div>

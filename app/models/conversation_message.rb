@@ -1,4 +1,4 @@
 class ConversationMessage < ApplicationRecord
-  belongs_to :message
-  belongs_to :conversation
+  has_many :message
+  has_many :conversation
 end

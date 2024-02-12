@@ -1,5 +1,32 @@
 <div class="container">
-  <h1>Messages page</h1>
-  <button class="btn btn-success">New conversation</button>
-  <%= @elements %>
+  <h1>Conversation with 
+  <% if @users %>
+  <% @users.each do |user| %>
+    <% if user.user_id != current_user.id %>
+      <%= User.find(user.id).email %>
+    <% end %>
+  <% end %>
+  <% end %>
+  </h1>
+  <div class="messagescontainer" id="messagescontainer">
+    <% if @messages && @messages.exists? %>
+    <div class="row">
+    <% @messages.each do |message| %>
+        <div class="col-lg-6">
+        <%= render partial: 'message', :locals => {:element => message} %>
+        </div>
+    <% end %>
+    </div>
+    <% else %>
+    There are no messages yet, say hello!
+    <% end %>
+  </div>
+  <form class="row mt-4" id="sendMessage">
+    <div class="col-lg-4">
+      <textarea class="form-control" id="messageContent" required></textarea>
+    </div>
+    <div class="col-lg-2">
+      <button class="btn btn-primary" type="submit">SEND</button>
+    </div>
+  </form>
 </div>
