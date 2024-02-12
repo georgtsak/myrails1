@@ -1,0 +1,16 @@
+<div class="card">
+  <div class="card-body">
+    <p class="card-title">
+      <%= element.user %>
+    </p>
+    <p class="card-text">
+      <%= element.content %>
+    </p>
+  </div>
+  <div class="card-footer">
+    <%= element.created_at %>
+    <% if element.updated_at != element.created_at %>
+        | <%= element.updated_at %>
+    <% end %>
+  </div>
+</div>
