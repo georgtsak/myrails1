@@ -17,14 +17,6 @@ class MessagesController < ApplicationController
         end
     end
 
-    def send
-        if !user_signed_in?
-            redirect_to '/users/sign_in'
-        else
-            
-        end
-    end
-
     def createconv
         if !user_signed_in?
             redirect_to '/users/sign_in'
