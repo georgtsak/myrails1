@@ -42,10 +42,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_24_101315) do
   end
 
   create_table "messages", force: :cascade do |t|
-    t.string "value"
+    t.string "content"
+    t.integer "users_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["id"], name: "index_messages_on_id", unique: true
+    t.index ["users_id"], name: "index_messages_on_users_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -55,7 +57,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_24_101315) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["creator_id"], name: "index_posts_on_creator_id"
-    t.index ["id"], name: "index_posts_on_id", unique: true
   end
 
   create_table "posts_categories", force: :cascade do |t|
@@ -80,34 +81,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_24_101315) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "users_friends", force: :cascade do |t|
-    t.integer "initiator_id", null: false
-    t.integer "recepient_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["initiator_id"], name: "index_users_friends_on_initiator_id"
-    t.index ["recepient_id"], name: "index_users_friends_on_recepient_id"
-  end
-
-  create_table "users_requests", force: :cascade do |t|
-    t.integer "initiator_id", null: false
-    t.integer "recepient_id", null: false
-    t.string "status"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["initiator_id"], name: "index_users_requests_on_initiator_id"
-    t.index ["recepient_id"], name: "index_users_requests_on_recepient_id"
-  end
-
   add_foreign_key "conversation_messages", "conversations"
   add_foreign_key "conversation_messages", "messages"
   add_foreign_key "conversation_users", "conversations"
   add_foreign_key "conversation_users", "users"
+  add_foreign_key "messages", "users", column: "users_id"
   add_foreign_key "posts", "users", column: "creator_id"
   add_foreign_key "posts_categories", "categories"
   add_foreign_key "posts_categories", "posts"
-  add_foreign_key "users_friends", "initiators"
-  add_foreign_key "users_friends", "recepients"
-  add_foreign_key "users_requests", "initiators"
-  add_foreign_key "users_requests", "recepients"
 end

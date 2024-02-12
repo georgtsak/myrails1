@@ -3,7 +3,7 @@ class MessagesController < ApplicationController
         if !user_signed_in?
             redirect_to '/users/sign_in'
         else
-            @elements = current_user.conversationuser.all
+            @elements = current_user.conversationuser.all()
         end
     end
 
@@ -11,7 +11,17 @@ class MessagesController < ApplicationController
         if !user_signed_in?
             redirect_to '/users/sign_in'
         else
+            @conversation = Conversation.find(params[:id]) or not_found
+            @messages = ConversationMessage.find_by(conversation: @conversation.id)
+            @users = ConversationUser.where(:conversation => @conversation.id)
+        end
+    end
 
+    def send
+        if !user_signed_in?
+            redirect_to '/users/sign_in'
+        else
+            
         end
     end
 
@@ -20,7 +30,7 @@ class MessagesController < ApplicationController
             redirect_to '/users/sign_in'
         else
             initiate_user = current_user
-            target_user = User.find(3)
+            target_user = User.find(2)
             
             current_conversation = ConversationUser.find_by(user_id: initiate_user.id)
             conversation = nil
