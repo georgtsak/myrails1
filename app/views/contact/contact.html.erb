@@ -1,0 +1,12 @@
+<h1>Add Contacts</h1>
+
+<%= form_with(model: @contact, url: add_contact_path, local: true) do |form| %>
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.text_field :email %>
+  </div>
+  <br>
+  <div class="actions">
+    <%= form.submit "Add Contact" %>
+  </div>
+<% end %>
