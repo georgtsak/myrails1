@@ -5,9 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :posts
-  has_many :messages
-  has_many :conversations
-  has_many :conversationuser, class_name: 'ConversationUser'
+  has_many :messages, through: ConversationMessage
+  has_many :conversations, through: ConversationUser
   has_many :contacts
   has_many :friends, through: :contacts	
 end

@@ -1,6 +1,5 @@
 class Conversation < ApplicationRecord
     has_many :users, class_name: 'User'
-    has_many :messages
-    has_many :conversationmessages
-    has_many :conversationusers
+    has_many :messages, through: ConversationMessage
+    has_many :conversation, through: ConversationUser
 end

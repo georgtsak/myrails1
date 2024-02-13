@@ -9,11 +9,15 @@
   <% end %>
   </h1>
   <div class="messagescontainer" id="messagescontainer">
-    <% if @messages && @messages.exists? %>
+    <% if @messages %>
     <div class="row">
     <% @messages.each do |message| %>
-        <div class="col-lg-6">
-        <%= render partial: 'message', :locals => {:element => message} %>
+        <div class="col-lg-12 mb-4">
+          <div class="row">
+            <div class="col-lg-6">
+              <%= render partial: 'message', :locals => {:element => message} %>
+            </div>
+          </div>
         </div>
     <% end %>
     </div>
@@ -21,12 +25,18 @@
     There are no messages yet, say hello!
     <% end %>
   </div>
-  <form class="row mt-4" id="sendMessage">
-    <div class="col-lg-4">
-      <textarea class="form-control" id="messageContent" required></textarea>
-    </div>
-    <div class="col-lg-2">
-      <button class="btn btn-primary" type="submit">SEND</button>
-    </div>
-  </form>
+
+  <%= form_with model: Message, url: messages_path, method: :post, id: 'sendMessage', local: true do |f| %>
+    <fieldset>
+      <div class="row">
+        <div class="col-lg-5">
+          <%= f.text_area :content, class: 'form-control' %>
+        </div>
+        <div class="actions col-lg-1">
+          <%= f.text_field :conversation_id, type: 'hidden', value: @conversation.id %>
+          <%= f.submit "Send", class: 'btn btn-default btn-success btn-block' %>
+        </div>
+      </div>
+    </fieldset>
+  <% end %>
 </div>
