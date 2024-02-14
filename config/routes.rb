@@ -17,14 +17,14 @@ Rails.application.routes.draw do
   get "/posts/categories/:id", to: "categories#show"
 
   get "/messages", to: "messages#index"
-  get "/messages/createconv", to: "messages#createconv"
+  post "/messages/createconv", to: "messages#createconv"
   post "/messages/create", to: "messages#create"
   get "/messages/:id", to: "messages#show"
   
   get '/contact', to: 'contact#contact'
   post "/add_contact", to: "contact#create", as: :add_contact
 	
+  get '/users/contacts', to: 'users#contacts'
   get '/users', to: 'users#index', as: 'users'
   resources :users, only: [:index, :show]
-  get '/message', to: 'contact#message'
 end

@@ -8,9 +8,9 @@
     </p>
   </div>
   <div class="card-footer">
-    <%= element.created_at %>
+    <%= element.created_at.strftime('%d.%m.%Y %H:%M') %>
     <% if element.updated_at != element.created_at %>
-        | <%= element.updated_at %>
+        | <%= element.updated_at.strftime('%d.%m.%Y %H:%M') %>
     <% end %>
   </div>
 </div>

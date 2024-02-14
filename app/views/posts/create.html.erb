@@ -3,7 +3,7 @@
     <h2>Create a new post</h2>
 
     <div class="posts-form">
-      <%= form_for :post do |f| %>    
+      <%= form_for :post do |f| %>
         <fieldset>
           <div class="field mb-3">
             <%= f.label :title, class: 'form-label' %><br />
@@ -15,10 +15,10 @@
             <%= f.text_area :content, class: 'form-control post-content', rows: '3' %>
           </div>
           
-          <div class="field mb-3">
+          div class="field mb-3">
             <%= f.label :categories, class: 'form-label' %><br />
             <%= select_tag('categories[]', options_from_collection_for_select(Category.all, :id, :name), {:class => 'select-tags', :multiple => 'multiple', :style => 'width: 100%'}) %>
-          </div>
+          </div><
         
           <div class="actions">
             <%= f.submit "Create!", class: 'btn btn-default btn-success' %>
