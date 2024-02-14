@@ -16,6 +16,12 @@ class UsersController < ApplicationController
       render :new
     end
   end
+  def contacts
+    @user = current_user
+    @contacts = current_user.friends
+    
+    render json: { message: 'Success', data: @contacts }, status: :ok
+  end
   def add_contact
     @user = current_user
     @contact = @user.contacts.build(recipient_id: params[:recipient_id])

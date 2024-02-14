@@ -43,17 +43,89 @@
     <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" %>
     <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" %>
     
-    <script>
+    <script>    
     $(window).on('load', function() {
       $(".select-tags").select2({
           tags: true
       });
+
+      $(".select-multiple").select2({
+          multiple: true
+      });
     });
 
     $('#messagescontainer').height($(window).height() - 300)
+    if ($('#messagescontainer').length > 0) {
+      $('#messagescontainer').scrollTop($('#messagescontainer')[0].scrollHeight)
+    }
 
-    $('#sendMessage').on('submit', function() {
-      
+    $('#sendMessage').on('submit', function(event) {
+      event.preventDefault()
+
+      const formValues = $('#sendMessage').serializeArray()
+      let values = {}
+
+      for (let i = 0; i < formValues.length; i++) {
+        if (formValues[i].name === 'message[conversation_id]') {
+          values['conversation'] = {}
+          values.conversation.id = formValues[i].value
+        } else if (formValues[i].name === 'message[content]') {
+          values['message'] = {}
+          values.message.content = formValues[i].value
+        } else {
+          values[formValues[i].name] = formValues[i].value
+        }
+      }
+
+      request = $.ajax({
+        url: "/messages/create",
+        type: "POST",
+        data: JSON.stringify(values),
+        contentType: "application/json; charset=utf-8",
+        headers: {
+          "X-CSRF-Token": values['authenticity_token']
+        },
+        beforeSend(xhr) {
+          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+        }
+      })
+
+      request.done(function (response, textStatus, jqXHR){
+          console.log("Hooray, it worked!")
+          console.log(response)
+      })
+
+      request.fail(function (jqXHR, textStatus, errorThrown){
+          console.error(
+              "The following error occurred: "+
+              textStatus, errorThrown
+          )
+      })
+
+      request.always(function () {
+          console.log('Always fired')
+      })
+    })
+
+    let request = $.ajax({
+      url: "/users/contacts",
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+    })
+
+    request.done(function (response, textStatus, jqXHR){
+        console.log(response)
+    })
+
+    request.fail(function (jqXHR, textStatus, errorThrown){
+        console.error(
+            "The following error occurred: "+
+            textStatus, errorThrown
+        )
+    })
+
+    request.always(function () {
+        console.log('Always fired')
     })
     </script>
   </body>

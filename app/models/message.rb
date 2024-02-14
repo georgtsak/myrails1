@@ -1,4 +1,4 @@
 class Message < ApplicationRecord
-  has_one :users
-  has_one :conversations
+  has_many :user
+  has_many :conversation
 end

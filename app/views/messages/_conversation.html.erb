@@ -5,14 +5,17 @@
     <div 
         class="ms-2 me-auto"
     >
-        <% last_message = ConversationMessage.find_by(conversation: element.id) %>
+        <% last_message = element.messages.last %>
         <% if last_message %>
-        <%= last_message.last.content %>
+        <%= User.find(last_message.users_id).email %>:
+        <%= last_message.content %>
         <% end %>
     </div>
     <span 
         class="badge bg-primary rounded-pill"
     >
-        1
+        <% if last_message %>
+        <%= last_message.updated_at.strftime('%d.%m.%Y %H:%M') %>
+        <% end %>
     </span>
 </a>

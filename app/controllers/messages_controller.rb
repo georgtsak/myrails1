@@ -3,7 +3,8 @@ class MessagesController < ApplicationController
         if !user_signed_in?
             redirect_to '/users/sign_in'
         else
-            @elements = current_user.conversationuser.all()
+            @user = current_user
+            @elements = current_user.conversations.all
         end
     end
 
@@ -11,9 +12,9 @@ class MessagesController < ApplicationController
         if !user_signed_in?
             redirect_to '/users/sign_in'
         else
+            @contacts = current_user.contacts
             @conversation = Conversation.find(params[:id]) or not_found
-            @messages = ConversationMessage.find_by(conversation: @conversation.id)
-            @users = ConversationUser.where(:conversation => @conversation.id)
+            @messages = @conversation.messages
         end
     end
 
@@ -21,21 +22,11 @@ class MessagesController < ApplicationController
         if !user_signed_in?
             redirect_to '/users/sign_in'
         else
-            initiate_user = current_user
-            target_user = User.find(2)
-            
-            current_conversation = ConversationUser.find_by(user_id: initiate_user.id)
-            conversation = nil
-            if current_conversation
-                render index
+            @conversation = Conversation.new({ :uid => conversation_create_params[:name], :user_ids => user_params[:ids].push(current_user.id) })
+            if @conversation.save
+                render json: { message: 'Conversation created successfully' }, status: :created
             else
-                conversation = Conversation.new('uid' => 'test')
-                conversation.save()
-
-                conversation_1 = ConversationUser.new(:conversation_id => conversation.id, :user_id => initiate_user.id)
-                conversation_1.save()
-                conversation_2 = ConversationUser.new(:conversation_id => conversation.id, :user_id => target_user.id)
-                conversation_2.save()
+                render json: { error: @conversation.errors.full_messages.join(', ') }, status: :unprocessable_entity
             end
         end
     end
@@ -44,7 +35,41 @@ class MessagesController < ApplicationController
         if !user_signed_in?
             redirect_to '/users/sign_in'
         else
+            current_conversation = Conversation.find(conversation_params[:id])
+            message = current_conversation.messages.create({ :content => message_params[:content], :users_id => current_user.id})
 
+            if message.save
+                render json: { message: 'Message sent successfully' }, status: :created
+            else
+                render json: { error: message.errors.full_messages.join(', ') }, status: :unprocessable_entity
+            end
+        end
+    end
+
+    private
+
+    def user_params
+        params.require(:user).permit(:ids => [])
+    end
+
+    def conversation_create_params
+        params.require(:conversation).permit(:name)
+    end
+
+    def conversation_params
+        params.require(:conversation).permit(:id)
+    end
+
+    def message_params
+        params.require(:message).permit(:content)
+    end
+
+    def notify_recipient
+        conv_users = ConversationUser.where(:conversation => @conversation.id)
+        conv_users.each do |user|
+            next if user.eql?(current_user)
+            notification = NewMessageNotifier.with(message: @message.content, conversation: @message.conversation, type: "message")
+            notification.deliver(user)
         end
     end
 end

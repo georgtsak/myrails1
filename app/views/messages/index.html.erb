@@ -1,17 +1,46 @@
 <div class="container">
   <h1>Conversations page</h1>
-  <button class="btn btn-success mb-2">New conversation</button>
+  <button class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#createConvModal">New conversation</button>
   <% if @elements %>
   <div class="row">
     <div class="col-lg-6">
       <ol class="list-group">
-        <% @elements.each do |element| %>
-          <%= render partial: 'conversation', :locals => {:element => element} %>
-        <% end %>
+      <% @elements.each do |element| %>
+        <%= render partial: 'conversation', :locals => {:element => element} %>
+      <% end %>
       </ol>
     </div>
   </div>
   <% else %>
   No conversations yet
   <% end %>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="createConvModal" tabindex="-1" aria-labelledby="createConvModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title h1 fs-5" id="createConvModalLabel">Create conversation</div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <%= form_for :conversation do |f| %>
+          <div class="field mb-3">
+            <%= f.label :name, class: 'form-label' %><br />
+            <%= f.text_field :name, class: 'form-control' %>
+          </div>
+
+          <div class="field mb-3">
+            <%= f.label :users, class: 'form-label' %><br />
+            <%= select_tag('users[]', options_from_collection_for_select([], :id, :email), {:class => 'select-tags', :multiple => 'multiple', :style => 'width: 100%'}) %>
+          </div>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
 </div>
