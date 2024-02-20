@@ -1,38 +1,39 @@
 class UsersController < ApplicationController
   def index
+    if !user_signed_in?
+      redirect_to '/users/sign_in'
+    end
     @users = User.all
   end
   def show
+    if !user_signed_in?
+      redirect_to '/users/sign_in'
+    end
     @user = User.find(params[:id])
   end
+  def me
+    if !user_signed_in?
+      redirect_to '/users/sign_in'
+    end
+    @user = current_user
+    render show
+  end
   def new
+    if !user_signed_in?
+      redirect_to '/users/sign_in'
+    end
     @user = User.new
   end
   def create
+    if !user_signed_in?
+      redirect_to '/users/sign_in'
+    end
     @user = User.new(user_params)
     if @user.save
       redirect_to @user, notice: 'User was successfully created.'
     else
       render :new
     end
-  end
-  def contacts
-    @user = current_user
-    @contacts = current_user.friends
-    
-    render json: { message: 'Success', data: @contacts }, status: :ok
-  end
-  def add_contact
-    @user = current_user
-    @contact = @user.contacts.build(recipient_id: params[:recipient_id])
-
-    if @contact.save
-      flash[:success] = "Contact added successfully!"
-    else
-      flash[:error] = "Unable to add contact."
-    end
-
-    redirect_to users_path
   end
   private
   def user_params

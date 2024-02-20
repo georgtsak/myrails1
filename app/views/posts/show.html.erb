@@ -1,6 +1,7 @@
-<section class="default-section posts">
-    <div class="container">
-        <h1><%= @post.title %></h1>
-        <p class="post-content"><%= @post.content %></p>
-    </div>
-</div>
+<h1><%= @post.title %></h1>
+<p class="post-created">Created: <%= @post.created_at %></p>
+<% if @post.updated_at != @post.created_at %>
+<p class="post-updated">Updated: <%= @post.updated_at %></p>
+<% end %>
+<p class="post-content"><%= @post.content %></p>
+<%= link_to "Back", controller: "posts", action: "index" %>

@@ -5,17 +5,27 @@
   <fieldset>
     <div class="field mb-3">
       <%= f.label :email, class: 'form-label' %><br />
-      <%= f.email_field :email, autofocus: true, autocomplete: "email" class: 'form-control' %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control' %>
+    </div>
+
+    <div class="field mb-3">
+      <%= f.label :last_name, class: 'form-label' %><br />
+      <%= f.text_field :last_name, autocomplete: "last_name", class: 'form-control' %>
+    </div>
+
+    <div class="field mb-3">
+      <%= f.label :first_name, class: 'form-label' %><br />
+      <%= f.text_field :first_name, autocomplete: "first_name", class: 'form-control' %>
     </div>
 
     <div class="field mb-3">
       <%= f.label :password, class: 'form-label' %><br />
-      <%= f.password_field :password, autocomplete: "new-password" class: 'form-control' %>
+      <%= f.password_field :password, autocomplete: "new-password", class: 'form-control' %>
     </div>
 
     <div class="field mb-3">
       <%= f.label :password_confirmation, class: 'form-label' %><br />
-      <%= f.password_field :password_confirmation, autocomplete: "new-password" class: 'form-control' %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: 'form-control' %>
     </div>
 
     <div class="actions">

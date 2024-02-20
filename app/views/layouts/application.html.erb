@@ -15,29 +15,30 @@
     <header>
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container">
-          <a class="navbar-brand" href="#">Navbar</a>
-          <button 
-            class="navbar-toggler" 
-            type="button" 
-            data-bs-toggle="collapse" 
-            data-bs-target="#navbarTop" 
-            aria-controls="navbarTop" 
-            aria-expanded="false" 
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarTop">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-              </li>
-            </ul>
+          <a class="navbar-brand" href="#"><%= Rails.application.class.module_parent_name %></a>
+          <div class="d-flex">
+            <button class="btn btn-outline-success" type="submit">Login</button>
           </div>
         </div>
       </nav>
     </header>
-    <%= yield %>
+    <div class="container" style="padding-top: 30px">
+      <div class="row">
+        <div class="col-lg-2">
+          <aside>
+            <div class="list-group">
+              <a href="/users/me" class="list-group-item list-group-item-action">Home</a>
+              <a href="/friends" class="list-group-item list-group-item-action">Friends</a>
+              <a href="/messages" class="list-group-item list-group-item-action">Messages</a>
+              <a href="/posts" class="list-group-item list-group-item-action">Posts</a>
+            </div>
+          </aside>
+        </div>
+        <div class="col-lg-10">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
 
     <%= javascript_include_tag "https://code.jquery.com/jquery-3.7.1.min.js" %>
     <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" %>
@@ -108,7 +109,7 @@
     })
 
     let request = $.ajax({
-      url: "/users/contacts",
+      url: "/friends/list",
       type: "GET",
       contentType: "application/json; charset=utf-8",
     })

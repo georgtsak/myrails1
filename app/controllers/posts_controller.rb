@@ -3,7 +3,7 @@ class PostsController < ApplicationController
     if !user_signed_in?
       redirect_to '/users/sign_in'
     else
-      @posts = Post.order(created_on: :desc).all()
+      @posts = Post.order(created_at: :desc).all()
     end
   end
 
@@ -19,8 +19,7 @@ class PostsController < ApplicationController
     if !user_signed_in?
       redirect_to '/users/sign_in'
     else
-      @posts = Post.where("creator_id" => current_user.id).all()
-      render index
+      @posts = Post.where("creator_id" => current_user.id).all
     end
   end
 

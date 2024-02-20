@@ -1,0 +1,14 @@
+<h1>Friends page</h1>
+<%= link_to "Pending requests", controller: "friends", action: "pending" %>
+<br>
+<% if @friends && @posts.friends? %>
+<div class="row posts-row">
+<% @friends.each do |friend| %>
+    <div class="col-lg-3">
+    <%= render partial: 'card', :locals => {:friend => friend} %>
+    </div>
+<% end %>
+</div>
+<% else %>
+There are no friends, not yet.
+<% end %>

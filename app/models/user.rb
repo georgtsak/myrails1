@@ -9,7 +9,20 @@ class User < ApplicationRecord
   has_many :conversation_users, dependent: :destroy
   has_many :conversations, through: :conversation_users
   has_many :messages, through: :conversation_messages
-  has_many :contacts
-  has_many :friends, through: :contacts
   has_many :notifications, as: :recipient, dependent: :destroy
+
+  def friends
+    friends_sent = FriendRequest.where(user_id: id, accepted: true).pluck(:friend_id)
+    friends_received = FriendRequest.where(friend_id: id, accepted: true).pluck(:user_id)
+    total_friends = friends_sent + friends_received
+    User.where(id: total_friends)
+  end
+
+  def friend_with?(user)
+    FriendRequest.confirmed_record?(id, user.id)
+  end
+
+  def add_friend(user)
+    FriendRequests.create(friend_id: user.id)
+  end
 end

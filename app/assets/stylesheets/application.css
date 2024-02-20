@@ -34,6 +34,11 @@
 .posts-form .select2 {
     max-width: 360px;
 }
+
+.posts-row {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 /* Posts */
 /* Messages */
 .messagescontainer {

@@ -5,13 +5,13 @@ Rails.application.routes.draw do
   # root "posts#index"
   get "/", to: "index#index"
   
-  get "/posts", to: "posts#index"
   get "/posts/create", to: "posts#create"
   post "/posts/create", to: "posts#create"
   get "/posts/delete", to: "posts#delete"
   post "/posts/delete", to: "posts#delete"
   get "/posts/my", to: "posts#my"
   get "/posts/:id", to: "posts#show"
+  get "/posts", to: "posts#index"
 
   get "/posts/categories", to: "categories#index"
   get "/posts/categories/:id", to: "categories#show"
@@ -20,11 +20,16 @@ Rails.application.routes.draw do
   post "/messages/createconv", to: "messages#createconv"
   post "/messages/create", to: "messages#create"
   get "/messages/:id", to: "messages#show"
-  
-  get '/contact', to: 'contact#contact'
-  post "/add_contact", to: "contact#create", as: :add_contact
-	
-  get '/users/contacts', to: 'users#contacts'
+
+  get '/users/me', to: 'users#me'
   get '/users', to: 'users#index', as: 'users'
+
+  post '/friends/new', to: 'friends#new'
+  post '/friends/remove', to: 'friends#remove'
+  post '/friends/accept', to: 'friends#accept'
+  get '/friends/list', to: 'friends#list'
+  get '/friends/pending', to: 'friends#pending'
+  get '/friends', to: 'friends#index'
+
   resources :users, only: [:index, :show]
 end
