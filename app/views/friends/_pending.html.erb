@@ -1,0 +1,14 @@
+<div class="card" style="width: 18rem;">
+  <div class="card-header">
+    Friend request from
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">
+    <%= link_to friend.last_name + " " + friend.first_name, controller: "users", action: "show", id: friend.id %>
+    </h5>
+  </div>
+  <div class="card-footer">
+    <a class="btn btn-success acceptFriend" data-id="<%=friend.id %>" href="#" style="margin-right: 10px">Accept</a>
+    <a class="btn btn-danger denyFriend" data-id="<%=friend.id %>" href="#">Deny</a>
+  </div>
+</div>

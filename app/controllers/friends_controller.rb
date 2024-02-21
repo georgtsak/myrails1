@@ -4,7 +4,7 @@ class FriendsController < ApplicationController
             redirect_to '/users/sign_in'
         end
 
-        @elements = current_user.friends
+        @friends = current_user.friends
     end
 
     def new
@@ -12,7 +12,7 @@ class FriendsController < ApplicationController
             redirect_to '/users/sign_in'
         end
 
-        friend_request = FriendRequest.new(user_id: current_user, friend_id: friend_request)
+        friend_request = FriendRequest.new(user_id: current_user.id, friend_id: friend_request_params[:id])
         if friend_request.save
             render json: { message: 'Request created successfully' }, status: :created
         else
@@ -25,9 +25,14 @@ class FriendsController < ApplicationController
             redirect_to '/users/sign_in'
         end
 
-        friend_request = FriendRequest.find_request(user_id: current_user, friend_id: friend_request)
+        friend_request = nil
+        if FriendRequest.where(user_id: current_user.id, friend_id: friend_request_params[:id]).empty?
+            friend_request = FriendRequest.where(user_id: friend_request_params[:id], friend_id: current_user.id, accepted: false)[0]
+        else
+            friend_request = FriendRequest.where(user_id: current_user.id, friend_id: friend_request_params[:id], accepted: false)[0]
+        end
 
-        if friend_request?
+        if !friend_request
             render json: { error: 'Request does not exist' }, status: :not_found
         end
         
@@ -43,14 +48,19 @@ class FriendsController < ApplicationController
             redirect_to '/users/sign_in'
         end
 
-        friend_request = FriendRequest.find_request(user_id: current_user, friend_id: friend_request)
+        friend_request = nil
+        if FriendRequest.where(user_id: current_user.id, friend_id: friend_request_params[:id], accepted: true).empty?
+            friend_request = FriendRequest.where(user_id: friend_request_params[:id], friend_id: current_user.id, accepted: false)[0]
+        else
+            friend_request = FriendRequest.where(user_id: current_user.id, friend_id: friend_request_params[:id], accepted: false)[0]
+        end
 
-        if friend_request?
+        if !friend_request
             render json: { error: 'Request does not exist' }, status: :not_found
         end
         
         if friend_request.update(accepted: true)
-            render json: { message: 'Request accepted successfully' }, status: :ok
+            render json: { message: 'Request denied successfully' }, status: :ok
         else
             render json: { error: friend_request.errors.full_messages.join(', ') }, status: :unprocessable_entity
         end
@@ -60,7 +70,6 @@ class FriendsController < ApplicationController
         if !user_signed_in?
             redirect_to '/users/sign_in'
         end
-
         @friends = current_user.friends
         render json: { message: 'Success', data: @friends }, status: :ok
     end
@@ -70,12 +79,12 @@ class FriendsController < ApplicationController
             redirect_to '/users/sign_in'
         end
 
-        @friends = current_user.friends
+        @friends = current_user.pending_received
     end
 
     private
 
-    def friend_request
+    def friend_request_params
         params.require(:user).permit(:id)
     end
 end

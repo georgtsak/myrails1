@@ -1,2 +1,56 @@
-<h2>Personal Contacts</h2>
-<%= render 'contacts' %>
+<h1><%=@user.last_name %> <%=@user.first_name %></h1>
+Registered at: <%=@user.created_at %>
+<% if ( @user.id != current_user.id ) && !@user.friend_with?(current_user) %>
+<div style="margin: 10px 0;">
+<a href="#" id="addFriend" data-id="<%=@user.id %>">Add as a friend</a>
+</div>
+<% end %>
+<br>
+<% if @posts && @posts.exists? %>
+<div class="row posts-row">
+<% @posts.each do |post| %>
+    <div class="col-lg-3">
+    <%= render partial: 'posts/post', :locals => {:post => post} %>
+    </div>
+<% end %>
+</div>
+<% else %>
+There are no posts, not yet.
+<% end %>
+
+<script>
+$('#addFriend').on('click', function() {
+    let currentObject = {}
+    currentObject.user = {}
+    currentObject.user.id = $(this).data('id')
+    currentObject.authenticity_token = $('meta[name="csrf-token"]').attr('content')
+
+  let request = $.ajax({
+    url: "/friends/new",
+    type: "POST",
+    data: JSON.stringify(currentObject),
+    contentType: "application/json; charset=utf-8",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content')
+    },
+    beforeSend(xhr) {
+      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+    }
+  })
+
+  request.done(function (response, textStatus, jqXHR){
+      console.log(response)
+  })
+
+  request.fail(function (jqXHR, textStatus, errorThrown){
+      console.error(
+          "The following error occurred: "+
+          textStatus, errorThrown
+      )
+  })
+
+  request.always(function () {
+      console.log('Always fired')
+  })
+})
+</script>

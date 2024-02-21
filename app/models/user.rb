@@ -15,6 +15,19 @@ class User < ApplicationRecord
     friends_sent = FriendRequest.where(user_id: id, accepted: true).pluck(:friend_id)
     friends_received = FriendRequest.where(friend_id: id, accepted: true).pluck(:user_id)
     total_friends = friends_sent + friends_received
+
+    User.where(id: total_friends)
+  end
+
+  def pending_sent
+    friends_sent = FriendRequest.where(user_id: id, accepted: false).pluck(:friend_id)
+    total_friends = friends_sent
+    User.where(id: total_friends)
+  end
+
+  def pending_received
+    friends_received = FriendRequest.where(friend_id: id, accepted: false).pluck(:user_id)
+    total_friends = friends_received
     User.where(id: total_friends)
   end
 

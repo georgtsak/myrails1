@@ -1,2 +1,87 @@
-<h1>Friends page</h1>
+<h1>Pending friends</h1>
 <%= link_to "My Friends", controller: "friends", action: "index" %>
+<br>
+<% if @friends %>
+<div class="row posts-row">
+<% @friends.each do |friend| %>
+    <div class="col-lg-3">
+    <%= render partial: 'pending', :locals => {:friend => friend} %>
+    </div>
+<% end %>
+</div>
+<% else %>
+There are no friends, not yet.
+<% end %>
+
+<script>
+$('.acceptFriend').on('click', function() {
+    let currentObject = {}
+    currentObject.user = {}
+    currentObject.user.id = $(this).data('id')
+    currentObject.authenticity_token = $('meta[name="csrf-token"]').attr('content')
+
+  let request = $.ajax({
+    url: "/friends/accept",
+    type: "POST",
+    data: JSON.stringify(currentObject),
+    contentType: "application/json; charset=utf-8",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content')
+    },
+    beforeSend(xhr) {
+      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+    }
+  })
+
+  request.done(function (response, textStatus, jqXHR){
+      console.log(response)
+  })
+
+  request.fail(function (jqXHR, textStatus, errorThrown){
+      console.error(
+          "The following error occurred: "+
+          textStatus, errorThrown
+      )
+  })
+
+  request.always(function () {
+      console.log('Always fired')
+  })
+})
+</script>
+<script>
+$('.denyFriend').on('click', function() {
+    let currentObject = {}
+    currentObject.user = {}
+    currentObject.user.id = $(this).data('id')
+    currentObject.authenticity_token = $('meta[name="csrf-token"]').attr('content')
+
+  let request = $.ajax({
+    url: "/friends/deny",
+    type: "POST",
+    data: JSON.stringify(currentObject),
+    contentType: "application/json; charset=utf-8",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content')
+    },
+    beforeSend(xhr) {
+      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+    }
+  })
+
+  request.done(function (response, textStatus, jqXHR){
+      console.log(response)
+  })
+
+  request.fail(function (jqXHR, textStatus, errorThrown){
+      console.error(
+          "The following error occurred: "+
+          textStatus, errorThrown
+      )
+  })
+
+  request.always(function () {
+      console.log('Always fired')
+  })
+})
+</script>

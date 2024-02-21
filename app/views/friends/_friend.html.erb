@@ -1,0 +1,8 @@
+<div class="card" style="width: 18rem;">
+  <div class="card-header">
+  <%= link_to friend.last_name + " " + friend.first_name, controller: "users", action: "show", id: friend.id %>
+  </div>
+  <div class="card-footer">
+    <a class="btn btn-danger denyFriend" data-id="<%=friend.id %>" href="#">Unfriend</a>
+  </div>
+</div>

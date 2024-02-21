@@ -1,14 +1,51 @@
-<h1>Friends page</h1>
+<h1>Friends</h1>
 <%= link_to "Pending requests", controller: "friends", action: "pending" %>
 <br>
-<% if @friends && @posts.friends? %>
+<% if @friends %>
 <div class="row posts-row">
 <% @friends.each do |friend| %>
     <div class="col-lg-3">
-    <%= render partial: 'card', :locals => {:friend => friend} %>
+    <%= render partial: 'friend', :locals => {:friend => friend, :short => true} %>
     </div>
 <% end %>
 </div>
 <% else %>
 There are no friends, not yet.
 <% end %>
+
+<script>
+$('.denyFriend').on('click', function() {
+    let currentObject = {}
+    currentObject.user = {}
+    currentObject.user.id = $(this).data('id')
+    currentObject.authenticity_token = $('meta[name="csrf-token"]').attr('content')
+
+  let request = $.ajax({
+    url: "/friends/deny",
+    type: "POST",
+    data: JSON.stringify(currentObject),
+    contentType: "application/json; charset=utf-8",
+    headers: {
+      "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content')
+    },
+    beforeSend(xhr) {
+      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+    }
+  })
+
+  request.done(function (response, textStatus, jqXHR){
+      console.log(response)
+  })
+
+  request.fail(function (jqXHR, textStatus, errorThrown){
+      console.error(
+          "The following error occurred: "+
+          textStatus, errorThrown
+      )
+  })
+
+  request.always(function () {
+      console.log('Always fired')
+  })
+})
+</script>

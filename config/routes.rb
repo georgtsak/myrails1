@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   get '/users', to: 'users#index', as: 'users'
 
   post '/friends/new', to: 'friends#new'
-  post '/friends/remove', to: 'friends#remove'
+  post '/friends/deny', to: 'friends#deny'
   post '/friends/accept', to: 'friends#accept'
   get '/friends/list', to: 'friends#list'
   get '/friends/pending', to: 'friends#pending'
