@@ -1,49 +1,27 @@
 class MessagesController < ApplicationController
-    def index
-        if !user_signed_in?
-            redirect_to '/users/sign_in'
-        else
-            @user = current_user
-            @elements = current_user.conversations.all
-        end
-    end
-
-    def show
-        if !user_signed_in?
-            redirect_to '/users/sign_in'
-        else
-            @contacts = current_user.friends
-            @conversation = Conversation.find(params[:id]) or not_found
-            @messages = @conversation.messages
-        end
-    end
-
-    def createconv
-        if !user_signed_in?
-            redirect_to '/users/sign_in'
-        else
-            @conversation = Conversation.new({ :uid => conversation_create_params[:name], :user_ids => user_params[:ids].push(current_user.id) })
-            if @conversation.save
-                render json: { message: 'Conversation created successfully' }, status: :created
-            else
-                render json: { error: @conversation.errors.full_messages.join(', ') }, status: :unprocessable_entity
-            end
-        end
-    end
-
     def create
-        if !user_signed_in?
-            redirect_to '/users/sign_in'
-        else
-            current_conversation = Conversation.find(conversation_params[:id])
-            message = current_conversation.messages.create({ :content => message_params[:content], :users_id => current_user.id})
+        redirect_login
 
-            if message.save
-                render json: { message: 'Message sent successfully' }, status: :created
-            else
-                render json: { error: message.errors.full_messages.join(', ') }, status: :unprocessable_entity
-            end
+        current_conversation = Conversation.find(conversation_params[:id])
+        message = current_conversation.messages.create({ :content => message_params[:content], :users_id => current_user.id})
+
+        if message.save
+            render json: { message: 'Message sent successfully' }, status: :created
+        else
+            render json: { error: message.errors.full_messages.join(', ') }, status: :unprocessable_entity
         end
+    end
+
+    def update
+        redirect_login
+    end
+
+    def read
+        redirect_login
+    end
+
+    def delete
+        redirect_login
     end
 
     private

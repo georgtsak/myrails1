@@ -3,6 +3,12 @@ class ApplicationController < ActionController::Base
         raise ActionController::RoutingError.new('Not Found')
     end
 
+    def redirect_login
+        if !user_signed_in?
+            redirect_to '/users/sign_in'
+        end
+    end
+
     before_action :configure_permitted_parameters, if: :devise_controller?
 
     protected

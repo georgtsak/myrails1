@@ -13,13 +13,19 @@ Rails.application.routes.draw do
   get "/posts/:id", to: "posts#show"
   get "/posts", to: "posts#index"
 
-  get "/posts/categories", to: "categories#index"
   get "/posts/categories/:id", to: "categories#show"
+  get "/posts/categories", to: "categories#index"
 
-  get "/messages", to: "messages#index"
-  post "/messages/createconv", to: "messages#createconv"
   post "/messages/create", to: "messages#create"
-  get "/messages/:id", to: "messages#show"
+  post "/messages/update", to: "messages#update"
+  post "/messages/delete", to: "messages#delete"
+  get "/messages/:id", to: "messages#read"
+
+  post '/conversations/create', to: 'conversations#create'
+  post '/conversations/update', to: 'conversations#update'
+  post '/conversations/delete', to: 'conversations#delete'
+  get '/conversations/:id', to: 'conversations#read'
+  get '/conversations', to: 'conversations#index'
 
   get '/users/me', to: 'users#me'
   get '/users', to: 'users#index', as: 'users'
