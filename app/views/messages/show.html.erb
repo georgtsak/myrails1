@@ -1,13 +1,5 @@
 <div class="container">
-  <h1>Conversation with 
-  <% if @users %>
-  <% @users.each do |user| %>
-    <% if user.user_id != current_user.id %>
-      <%= User.find(user.id).email %>
-    <% end %>
-  <% end %>
-  <% end %>
-  </h1>
+  <h1><%=@conversation.uid %></h1>
   <div class="messagescontainer" id="messagescontainer">
     <% if @messages %>
     <div class="row">

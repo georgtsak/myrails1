@@ -12,7 +12,7 @@ class MessagesController < ApplicationController
         if !user_signed_in?
             redirect_to '/users/sign_in'
         else
-            @contacts = current_user.contacts
+            @contacts = current_user.friends
             @conversation = Conversation.find(params[:id]) or not_found
             @messages = @conversation.messages
         end

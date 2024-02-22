@@ -29,6 +29,7 @@
     <div class="container" style="padding-top: 30px">
       <div class="row">
         <div class="col-lg-2">
+          <% if current_user %>
           <aside>
             <div class="list-group">
               <a href="/users/<%=current_user.id %>" class="list-group-item list-group-item-action">Home</a>
@@ -37,6 +38,7 @@
               <a href="/posts" class="list-group-item list-group-item-action">Posts</a>
             </div>
           </aside>
+          <% end %>
         </div>
         <div class="col-lg-10">
           <%= yield %>
@@ -94,17 +96,6 @@
       request.done(function (response, textStatus, jqXHR){
           console.log("Hooray, it worked!")
           console.log(response)
-      })
-
-      request.fail(function (jqXHR, textStatus, errorThrown){
-          console.error(
-              "The following error occurred: "+
-              textStatus, errorThrown
-          )
-      })
-
-      request.always(function () {
-          console.log('Always fired')
       })
     })
     </script>

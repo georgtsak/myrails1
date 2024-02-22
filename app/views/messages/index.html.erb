@@ -24,46 +24,98 @@ No conversations yet
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
-      <%= form_for :conversation do |f| %>
+      <%= form_for :conversation, :id => 'createConversationForm' do |f| %>
         <div class="field mb-3">
           <%= f.label :name, class: 'form-label' %><br />
           <%= f.text_field :name, class: 'form-control' %>
         </div>
 
         <div class="field mb-3">
-          <%= f.label :users, class: 'form-label' %><br />
-          <%= select_tag('users[]', options_from_collection_for_select([], :id, :email), {:class => 'select-tags', :multiple => 'multiple', :style => 'width: 100%'}) %>
+          <%= f.label :friends, class: 'form-label' %><br />
+          <%= select_tag('users[]', options_from_collection_for_select([], :id, :email), {:class => 'select-friends', :multiple => true, :style => 'width: 100%'}) %>
         </div>
+
+        <%= f.submit "Create", class: 'btn btn-default btn-primary btn-block' %>
       <% end %>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-primary">Save changes</button>
     </div>
   </div>
 </div>
 
 <script>
 $(window).on('load', function() {
-  let request = $.ajax({
-    url: "/friends/list",
-    type: "GET",
-    contentType: "application/json; charset=utf-8",
+  function formatFriend (friend) {
+    var $friend = $(
+      '<span>' + friend.email + ': ' + friend.last_name + " " + friend.first_name + '' + '</span>'
+    );
+    return $friend;
+  };
+
+  $(".select-friends").select2({
+    templateResult: formatFriend,
+    templateSelection: formatFriend,
+    multiple: true,
+    tags: false,
+    delay: 400,
+    dropdownParent: $('#createConvModal'),
+    ajax: {
+      url: '/friends/list',
+      dataType: 'json',
+      data: function (params) {
+        var query = {
+          search: params.term
+        }
+        return query
+      },
+      processResults: function (data) {
+        return {
+          results: data.data
+        };
+      },
+      cache: true
+    }
   })
 
-  request.done(function (response, textStatus, jqXHR){
-      console.log(response)
-  })
+  $('#createConversationForm').on('submit', function(event) {
+    event.preventDefault()
 
-  request.fail(function (jqXHR, textStatus, errorThrown){
-      console.error(
-          "The following error occurred: "+
-          textStatus, errorThrown
-      )
-  })
+    const formValues = $('#createConversationForm').serializeArray()
+    let values = {}
 
-  request.always(function () {
-      console.log('Always fired')
+    for (let i = 0; i < formValues.length; i++) {
+      if (formValues[i].name === 'conversation[name]') {
+        values['conversation'] = {}
+        values.conversation.name = formValues[i].value
+      }
+    }
+
+    delete values['users[]']
+    values['user'] = {}
+    values['user']['ids'] = []
+    const realUsers = $(".select-friends").select2('data')
+
+    for (let i = 0; realUsers.length > i; i++) {
+      values['user']['ids'].push(realUsers[i]['id'])
+    }
+
+    request = $.ajax({
+      url: "/messages/createconv",
+      type: "POST",
+      data: JSON.stringify(values),
+      contentType: "application/json; charset=utf-8",
+      headers: {
+        "X-CSRF-Token": values['authenticity_token']
+      },
+      beforeSend(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      }
+    })
+
+    request.done(function (response, textStatus, jqXHR){
+        console.log(response)
+    })
   })
 })
 </script>

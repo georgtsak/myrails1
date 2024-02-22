@@ -70,7 +70,15 @@ class FriendsController < ApplicationController
         if !user_signed_in?
             redirect_to '/users/sign_in'
         end
-        @friends = current_user.friends
+
+        key = "%#{params[:search]}%"
+
+        if params[:search]
+            @friends = current_user.friends.where("email LIKE ?", key).limit(10)
+        else
+            @friends = current_user.friends
+        end
+        
         render json: { message: 'Success', data: @friends }, status: :ok
     end
 
