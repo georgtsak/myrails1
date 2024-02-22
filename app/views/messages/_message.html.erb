@@ -1,13 +1,16 @@
-<div class="card message <% if element.users_id == current_user.id %>border-success<% end %>">
-  <div class="card-header">
-    <%= User.find(element.users_id).email %>
+<div class="message">
+  <div class="message-user">
+    <%= link_to User.find(element.users_id).last_name + " " + User.find(element.users_id).first_name, controller: "users", action: "show", id: element.users_id %>
   </div>
-  <div class="card-body">
-    <p class="card-text">
-      <%= element.content %>
-    </p>
+  <div class="card bg-body-tertiary <% if element.users_id == current_user.id %>border-success<% end %>">
+    <div class="card-body">
+      
+      <p class="card-text">
+        <%= element.content %>
+      </p>
+    </div>
   </div>
-  <div class="card-footer">
+  <div class="message-date">
     <%= element.created_at.strftime('%d.%m.%Y %H:%M') %>
     <% if element.updated_at != element.created_at %>
         | <%= element.updated_at.strftime('%d.%m.%Y %H:%M') %>

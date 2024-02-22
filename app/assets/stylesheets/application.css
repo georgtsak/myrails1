@@ -18,6 +18,14 @@
     padding: 2rem 0
 }
 
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 /* Posts */
 .post {
     margin-bottom: 15px;
@@ -45,5 +53,21 @@
     max-height: 80%;
     overflow-y: scroll;
     overflow-x: hidden;
+}
+
+.message-user a {
+    color: #000;
+}
+
+.message .card {
+    border-width: 2px;
+}
+
+.message-date {
+    margin-top: 5px;
+}
+
+#sendMessage .send {
+    width: 100%;
 }
 /* Messages */

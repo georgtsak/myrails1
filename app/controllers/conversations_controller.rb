@@ -11,7 +11,13 @@ class ConversationsController < ApplicationController
 
         @contacts = current_user.friends
         @conversation = Conversation.find(params[:id]) or not_found
-        @messages = @conversation.messages
+
+        if @conversation.users.map(&:id).include? current_user.id
+            @messages = @conversation.messages
+            @users = @conversation.users
+        else
+            redirect_to '/index/unauthorized'
+        end
     end
 
     def create
