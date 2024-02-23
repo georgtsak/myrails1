@@ -6,7 +6,18 @@ class MessagesController < ApplicationController
         message = current_conversation.messages.create({ :content => message_params[:content], :users_id => current_user.id})
 
         if message.save
-            render json: { message: 'Message sent successfully' }, status: :created
+            broadcast_to "conversation_messages:#{current_conversation.id}", partial: "messages/message", locals: { :element => message }, target: "messages"
+            current_conversation.users.each do |user|
+                message_object = {
+                    type: 'message',
+                    conversation: current_conversation,
+                    message: message
+                }
+
+                if user.id != current_user.id
+                    NotificationsChannel.broadcast_to("notifications:" + user.id.to_s, message_object)
+                end
+            end
         else
             render json: { error: message.errors.full_messages.join(', ') }, status: :unprocessable_entity
         end
@@ -40,14 +51,5 @@ class MessagesController < ApplicationController
 
     def message_params
         params.require(:message).permit(:content)
-    end
-
-    def notify_recipient
-        conv_users = ConversationUser.where(:conversation => @conversation.id)
-        conv_users.each do |user|
-            next if user.eql?(current_user)
-            notification = NewMessageNotifier.with(message: @message.content, conversation: @message.conversation, type: "message")
-            notification.deliver(user)
-        end
     end
 end

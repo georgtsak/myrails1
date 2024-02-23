@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  mount ActionCable.server => '/cable'
+
+  get 'notifications/index'
   get 'static_pages/contact'
   devise_for :users
   # Defines the root path route ("/")

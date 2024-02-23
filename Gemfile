@@ -68,6 +68,8 @@ end
 
 gem "devise", "~> 4.9"
 
-gem "noticed", "~> 2.1"
+gem 'noticed'
 
 gem "actioncable", "~> 7.1"
+
+gem "cable_ready", "~> 5.0"

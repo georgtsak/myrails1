@@ -9,7 +9,7 @@ class User < ApplicationRecord
   has_many :conversation_users, dependent: :destroy
   has_many :conversations, through: :conversation_users
   has_many :messages, through: :conversation_messages
-  has_many :notifications, as: :recipient, dependent: :destroy
+  has_many :notifications, as: :recipient, class_name: "Noticed::Notification"
 
   def friends
     friends_sent = FriendRequest.where(user_id: id, accepted: true).pluck(:friend_id)

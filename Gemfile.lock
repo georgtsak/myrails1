@@ -84,6 +84,12 @@ GEM
     bootsnap (1.17.0)
       msgpack (~> 1.2)
     builder (3.2.4)
+    cable_ready (5.0.3)
+      actionpack (>= 5.2)
+      actionview (>= 5.2)
+      activesupport (>= 5.2)
+      railties (>= 5.2)
+      thread-local (>= 1.1.0)
     capybara (3.39.2)
       addressable
       matrix
@@ -227,6 +233,7 @@ GEM
       railties (>= 6.0.0)
     stringio (3.1.0)
     thor (1.3.0)
+    thread-local (1.1.0)
     timeout (0.4.1)
     turbo-rails (1.5.0)
       actionpack (>= 6.0.0)
@@ -259,12 +266,13 @@ PLATFORMS
 DEPENDENCIES
   actioncable (~> 7.1)
   bootsnap
+  cable_ready (~> 5.0)
   capybara
   debug
   devise (~> 4.9)
   importmap-rails
   jbuilder
-  noticed (~> 2.1)
+  noticed
   puma (>= 5.0)
   rails (~> 7.1.2)
   selenium-webdriver
