@@ -1,18 +1,21 @@
-<div class="message">
+<%= turbo_frame_tag dom_id(message), class: 'message',
+    data: { controller: 'message', action: 'mouseout->message#toggleActions mouseover->message#toggleActions', 'message-author-id-value': message.users_id } do %>
+
   <div class="message-user">
-    <%= link_to User.find(element.users_id).last_name + " " + User.find(element.users_id).first_name, controller: "users", action: "show", id: element.users_id %>
+    <%= h User.find(message.users_id).last_name %>
   </div>
-  <div class="card bg-body-tertiary <% if element.users_id == current_user.id %>border-success<% end %>">
-    <div class="card-body">
-      <p class="card-text">
-        <%= element.content %>
-      </p>
+  <div class='message-date'>
+    <%= message.created_at %>
+    <% if message.edited? %>
+    <div class='col'>
+      <span class='fw-light fs-7'>edited <%= message.updated_at %></span>
     </div>
+  <% end %>
   </div>
-  <div class="message-date">
-    <%= element.created_at.strftime('%d.%m.%Y %H:%M') %>
-    <% if element.updated_at != element.created_at %>
-        | <%= element.updated_at.strftime('%d.%m.%Y %H:%M') %>
-    <% end %>
+  <div class='col invisible' data-message-target='actions'>
   </div>
-</div>
+
+  <div class='formatted-content'>
+    <%= message.content %>
+  </div>
+<% end %>

@@ -11,6 +11,9 @@ class User < ApplicationRecord
   has_many :messages, through: :conversation_messages
   has_many :notifications, as: :recipient, class_name: "Noticed::Notification"
 
+  scope :all_except, ->(user) { where.not(id: user) }
+  after_create_commit { broadcast_append_to "users" }
+
   def friends
     friends_sent = FriendRequest.where(user_id: id, accepted: true).pluck(:friend_id)
     friends_received = FriendRequest.where(friend_id: id, accepted: true).pluck(:user_id)

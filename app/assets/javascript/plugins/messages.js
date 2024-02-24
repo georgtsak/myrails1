@@ -1,7 +1,20 @@
+document.addEventListener("turbo:before-fetch-response", function (e) {
+    if (e.target.id === 'messageform') {
+        $(e.target).trigger('reset')
+        sleep(250).then(() => {
+            if ($('.messagescontainer').length > 0) {
+                $('.messagescontainer').scrollTop($('.messagescontainer')[0].scrollHeight)
+            }
+        })
+    }
+})
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
 $(window).on('load', function() {
-    $('#messagescontainer').height($(window).height() - 300)
-    if ($('#messagescontainer').length > 0) {
-    $('#messagescontainer').scrollTop($('#messagescontainer')[0].scrollHeight)
+    $('.messagescontainer').height($(window).height() - 300)
+    if ($('.messagescontainer').length > 0) {
+        $('.messagescontainer').scrollTop($('.messagescontainer')[0].scrollHeight)
     }
 
     $('#sendMessage').on('submit', function(event) {

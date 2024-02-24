@@ -1,12 +1,22 @@
 <h1><%=@conversation.uid %></h1>
 
+<%= turbo_stream_from @conversation %>
+
+<script>
+(function(){
+$('.messagescontainer').height($(window).height() - 300)
+}())
+</script>
+
 <div class="row">
   <div class="col-lg-8">
-    <div class="messagescontainer" id="messagescontainer">
-    <%= turbo_stream_from "conversation_messages:#{@conversation.id}" %>
-    <%= turbo_frame_tag "conversation_messages:#{@conversation.id}" do %>     
-      1234
-    <% end %>
+    <div class='flex-grow-1 messagescontainer d-flex flex-column-reverse overflow-auto message-list' id='messages'>
+      <% if @pagy.next.present? %>
+      <%= render partial: "next_page" %>
+      <% end %>
+      <%= turbo_stream.prepend "messages" do %>
+        <%= render partial: "messages/message", collection: @messages %>
+      <% end %>
     </div>
   </div>
   <div class="col-lg-4">
@@ -20,18 +30,9 @@
       <% end %>
     </div>
   </div>
+  <div class="col-lg-8">
+    <%= turbo_frame_tag @message, class: 'flex-shrink-0 px-3 pb-3 pt-2' do %>
+      <%= render 'messages/form', message: @new_message %>
+    <% end %>
+  </div>
 </div>
-
-<%= form_with model: Message, url: '/messages/create', method: :post, id: 'sendMessage', local: true do |f| %>
-  <fieldset>
-    <div class="row">
-      <div class="col-lg-6">
-        <%= f.text_area :content, class: 'form-control' %>
-      </div>
-      <div class="actions col-lg-2">
-        <%= f.text_field :conversation_id, type: 'hidden', value: @conversation.id %>
-        <%= f.submit "Send", class: 'btn btn-default btn-success btn-block send' %>
-      </div>
-    </div>
-  </fieldset>
-<% end %>

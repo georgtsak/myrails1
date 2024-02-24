@@ -3,7 +3,7 @@ class ConversationsController < ApplicationController
         redirect_login
 
         @user = current_user
-        @elements = current_user.conversations.all
+        @elements = current_user.conversations.includes(:messages).order("messages.created_at desc")
     end
 
     def read
@@ -13,8 +13,18 @@ class ConversationsController < ApplicationController
         @conversation = Conversation.find(params[:id]) or not_found
 
         if @conversation.users.map(&:id).include? current_user.id
-            @messages = @conversation.messages
+            @pagy, @messages = pagy(@conversation.messages.order(id: :desc), items: 10)
             @users = @conversation.users
+            @message = Message.new()
+
+            if params[:page]
+                render "scrollable_list"
+            else
+                respond_to do |format|
+                    format.html # GET
+                    format.turbo_stream # POST
+                end
+            end
         else
             redirect_to '/index/unauthorized'
         end
@@ -37,5 +47,15 @@ class ConversationsController < ApplicationController
 
     def delete
         redirect_login
+    end
+
+    private
+
+    def conversation_create_params
+        params.require(:conversation).permit(:name)
+    end
+
+    def user_params
+        params.require(:user).permit(:ids => [])
     end
 end

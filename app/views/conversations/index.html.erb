@@ -3,11 +3,12 @@
 <% if @elements %>
 <div class="row">
   <div class="col-lg-6">
-    <ol class="list-group">
-    <% @elements.each do |element| %>
-      <%= render partial: 'conversation', :locals => {:element => element} %>
-    <% end %>
-    </ol>
+    <%= turbo_stream_from "conversations" %>
+    <ol class="list-group" id="conversations">
+      <% @elements.each do |element| %>
+        <%= render partial: 'conversation', :locals => {:element => element} %>
+      <% end %>
+    </div>
   </div>
 </div>
 <% else %>
@@ -101,7 +102,7 @@ $(window).on('load', function() {
     }
 
     request = $.ajax({
-      url: "/messages/createconv",
+      url: "/conversations/create",
       type: "POST",
       data: JSON.stringify(values),
       contentType: "application/json; charset=utf-8",
