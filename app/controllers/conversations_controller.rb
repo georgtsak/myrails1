@@ -13,17 +13,15 @@ class ConversationsController < ApplicationController
         @conversation = Conversation.find(params[:id]) or not_found
 
         if @conversation.users.map(&:id).include? current_user.id
-            @pagy, @messages = pagy(@conversation.messages.order(id: :desc), items: 10)
+            @pagy, @messages = pagy(@conversation.messages.order(created_at: :desc), items: 10)
             @users = @conversation.users
             @message = Message.new()
 
-            if params[:page]
-                render "scrollable_list"
-            else
-                respond_to do |format|
-                    format.html # GET
-                    format.turbo_stream # POST
-                end
+            render "scrollable_list" if params[:page]
+
+            respond_to do |format|
+                format.html
+                format.turbo_stream
             end
         else
             redirect_to '/index/unauthorized'
@@ -33,7 +31,13 @@ class ConversationsController < ApplicationController
     def create
         redirect_login
 
-        @conversation = Conversation.new({ :uid => conversation_create_params[:name], :user_ids => user_params[:ids].push(current_user.id) })
+        @conversation = Conversation.new(uid: conversation_create_params[:name])
+        current_conversation_users = user_params[:ids].push(current_user.id)
+
+        current_conversation_users.each do |user|
+            @conversation.users.create(user)
+        end
+
         if @conversation.save
             render json: { message: 'Conversation created successfully' }, status: :created
         else

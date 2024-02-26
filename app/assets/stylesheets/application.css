@@ -42,21 +42,22 @@ a:not(.btn):hover {
 .posts-form .select2 {
     max-width: 360px;
 }
-
-.posts-row {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
 /* Posts */
 /* Messages */
 .messagescontainer {
     max-height: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
+    padding-right: 15px;
+}
+
+.messagescontainer > turbo-frame[complete] {
+    display: flex;
+    flex-flow: column-reverse;
 }
 
 .message-user a {
-    color: #000;
+    color: var(--bs-blue);
 }
 
 .message .card {
@@ -70,4 +71,89 @@ a:not(.btn):hover {
 #sendMessage .send {
     width: 100%;
 }
+
+.message-content {
+    background-color: #f4f4f4;
+    border-radius: 0.375rem;
+    margin-bottom: 30px;
+    padding: 15px;
+    border: var(--bs-list-group-border-width) solid var(--bs-list-group-border-color);
+    display: inline-block;
+}
+
+.message.current .message-content {
+    background-color: #f2fff3;
+}
 /* Messages */
+/* Notifications */
+.notifications {
+    display: flex;
+    flex-flow: column;
+    position: fixed;
+    right: 15px;
+    top: 15px;
+    max-width: 260px;
+    width: 100%;
+}
+
+.notifications-item {
+    width: 100%;
+    display: flex;
+    background-color: #f4f4f4;
+    border-radius: 0.375rem;
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 2px solid var(--bs-gray-900);
+	flex-flow: column;
+	position: relative;
+}
+
+.notifications-title {
+	margin-bottom: 10px;
+	font-size: 18px;
+}
+
+.notifications-content {
+	font-size: 14px;
+}
+
+.notifications-item__close {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: none;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	padding: 0;
+	width: 24px;
+	height: 24px;
+	font-size: 28px;
+}
+
+.notifications-item__close:hover {
+    color: var(--bs-blue)
+}
+/* Notifications */
+/* Friends */
+.friend .card-footer {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+}
+
+.friend .card-footer .btn {
+    width: 100%;
+}
+
+.friend .card-footer form {
+    flex-grow: 1;
+    margin-right: 5px;
+    flex-basis: 50%;
+}
+
+.friend .card-footer form:last-child {
+    margin-right: 0;
+    margin-left: 5px;
+}
+/* Friends */

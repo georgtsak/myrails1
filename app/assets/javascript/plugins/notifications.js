@@ -24,6 +24,24 @@ function subscribeForNotifications() {
         if (msg.message) {
             if (msg.message.type === 'message') {
                 updateConversation(msg.message.conversation, msg.message.message)
+            } else if (msg.message.type === 'friend') {
+                switch (msg.message.subtype) {
+                    case 'create':
+                        showNotification('Success', 'Friend request succesfully sent!', 'friend_notification_')
+                        break;
+
+                    case 'deny':
+                        showNotification('Success', 'Friend request succesfully denied!', 'friend_notification_')
+                        break;
+
+                    case 'accept':
+                        showNotification('Success', 'Friend request succesfully accepted!', 'friend_notification_')
+                        break;
+
+                    case 'not_exists':
+                        showNotification('Failure', 'Friend request does not exists!', 'friend_notification_')
+                        break;
+                }
             }
         }
     };
@@ -31,4 +49,20 @@ function subscribeForNotifications() {
         console.log('Notifications socket crashed.');
         console.log(error);
     };
+}
+
+function showNotification(notificationTitle, notificationText, notificationID) {
+    let element = $('<div class="notifications-item" id="' + notificationID + '"><button class="notifications-item__close">x</button>'
+    + '<div class="notifications-title">' + notificationTitle + '</div>' 
+    + '<div class="notifications-content">' + notificationText + '</div>' 
+    + '</div>')
+    $('#notifications').append(element)
+
+    sleep(4000).then(() => {
+        element.remove()
+    })
+
+    $(notificationID + ' .notifications-item__close').on('click', function() {
+        $(this).remove()
+    })
 }

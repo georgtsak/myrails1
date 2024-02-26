@@ -4,15 +4,14 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :posts
+  has_many :posts, dependent: :destroy
   has_many :conversation_messages, dependent: :destroy
   has_many :conversation_users, dependent: :destroy
   has_many :conversations, through: :conversation_users
-  has_many :messages, through: :conversation_messages
+  has_many :messages, through: :conversation_messages, dependent: :destroy
   has_many :notifications, as: :recipient, class_name: "Noticed::Notification"
 
   scope :all_except, ->(user) { where.not(id: user) }
-  after_create_commit { broadcast_append_to "users" }
 
   def friends
     friends_sent = FriendRequest.where(user_id: id, accepted: true).pluck(:friend_id)
@@ -32,6 +31,10 @@ class User < ApplicationRecord
     friends_received = FriendRequest.where(friend_id: id, accepted: false).pluck(:user_id)
     total_friends = friends_received
     User.where(id: total_friends)
+  end
+
+  def has_request?(user)
+    FriendRequest.reacted?(id, user.id)
   end
 
   def friend_with?(user)

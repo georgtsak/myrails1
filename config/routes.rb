@@ -3,9 +3,6 @@ Rails.application.routes.draw do
 
   get 'notifications/index'
   get 'static_pages/contact'
-  devise_for :users
-  # Defines the root path route ("/")
-  # root "posts#index"
   get "/", to: "index#index"
   
   get "/posts/create", to: "posts#create"
@@ -13,7 +10,7 @@ Rails.application.routes.draw do
   get "/posts/delete", to: "posts#delete"
   post "/posts/delete", to: "posts#delete"
   get "/posts/my", to: "posts#my"
-  get "/posts/:id", to: "posts#show"
+  get "/posts/:id", to: "posts#show", as: 'post'
   get "/posts", to: "posts#index"
 
   get "/posts/categories/:id", to: "categories#show"
@@ -39,7 +36,9 @@ Rails.application.routes.draw do
   post '/friends/accept', to: 'friends#accept'
   get '/friends/list', to: 'friends#list'
   get '/friends/pending', to: 'friends#pending'
+  get '/friends/sent', to: 'friends#sent'
   get '/friends', to: 'friends#index'
 
   resources :users, only: [:index, :show]
+  devise_for :users, :path => '', :path_names => { :sign_in => "login", :sign_out => "logout", :sign_up => "register" }
 end

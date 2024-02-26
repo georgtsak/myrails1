@@ -1,32 +1,34 @@
 class UsersController < ApplicationController
   def index
     if !user_signed_in?
-      redirect_to '/users/sign_in'
+      redirect_to '/login'
     end
     @users = User.all
   end
   def show
     if !user_signed_in?
-      redirect_to '/users/sign_in'
+      redirect_to '/login'
+    else
+      @user = User.find(params[:id]) or not_found
+      @posts = @user.posts
+      @friends = @user.friends
     end
-    @user = User.find(params[:id])
-    @posts = Post.where("creator_id" => @user.id).all
   end
   def me
     if !user_signed_in?
-      redirect_to '/users/sign_in'
+      redirect_to '/login'
     end
     @user = current_user
   end
   def new
     if !user_signed_in?
-      redirect_to '/users/sign_in'
+      redirect_to '/login'
     end
     @user = User.new
   end
   def create
     if !user_signed_in?
-      redirect_to '/users/sign_in'
+      redirect_to '/login'
     end
     @user = User.new(user_params)
     if @user.save

@@ -1,6 +1,8 @@
 <h1>Welcome!</h1>
 <h4><em>Connect &amp; Collaborate</em></h4><br><br>
+<% if !current_user %>
 <h4>Already have an account? Login here.</h4>
 <%= link_to "Login", new_user_session_path, class: "btn btn-primary"%><br><br>
 <h4>Don't have an account? Sign Up here.</h4>
 <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-secondary" %>
+<% end %>

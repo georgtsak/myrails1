@@ -87,10 +87,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_22_160315) do
   create_table "posts", force: :cascade do |t|
     t.string "title"
     t.string "content"
-    t.integer "creator_id", null: false
+    t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["creator_id"], name: "index_posts_on_creator_id"
+    t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
   create_table "posts_categories", force: :cascade do |t|
@@ -128,7 +128,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_22_160315) do
   add_foreign_key "conversation_users", "users"
   add_foreign_key "friend_requests", "users"
   add_foreign_key "messages", "users", column: "users_id"
-  add_foreign_key "posts", "users", column: "creator_id"
+  add_foreign_key "posts", "users"
   add_foreign_key "posts_categories", "categories"
   add_foreign_key "posts_categories", "posts"
 end

@@ -1,6 +1,6 @@
 <h1><%=@conversation.uid %></h1>
 
-<%= turbo_stream_from @conversation %>
+<%= turbo_stream_from 'messages' %>
 
 <script>
 (function(){
@@ -12,21 +12,18 @@ $('.messagescontainer').height($(window).height() - 300)
   <div class="col-lg-8">
     <div class='flex-grow-1 messagescontainer d-flex flex-column-reverse overflow-auto message-list' id='messages'>
       <% if @pagy.next.present? %>
-      <%= render partial: "next_page" %>
+        <%= render partial: "next_page" %>
       <% end %>
+
       <%= turbo_stream.prepend "messages" do %>
         <%= render partial: "messages/message", collection: @messages %>
       <% end %>
     </div>
   </div>
   <div class="col-lg-4">
-    <div class="messagesusers" id="messagesusers">
-      <% if @users %>
-      <ul class="list-group">
-        <% @users.each do |user| %>
-        <li class="list-group-item"><%=user.email%></li>
-        <% end %>
-      </ul>
+    <ul class="messagesusers list-group" id="users">
+      <%= turbo_stream.prepend "users" do %>
+        <%= render partial: "user", collection: @users %>
       <% end %>
     </div>
   </div>

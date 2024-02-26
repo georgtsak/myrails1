@@ -1,14 +1,37 @@
-<h1>Posts page</h1>
-<a href="/posts/my">My posts only</a>
-<br>
-<% if @posts && @posts.exists? %>
-<div class="row posts-row">
-<% @posts.each do |post| %>
-    <div class="col-lg-3">
-    <%= render partial: 'post', :locals => {:post => post} %>
+<%= turbo_stream_from 'posts' %>
+
+<div class="bg-white shadow rounded overflow-hidden">
+    <div class="px-4 pt-0 pb-4 bg-dark">
+        <div class="media align-items-end profile-header">
+            <div class="profile mr-3">
+
+            </div>
+            <div class="media-body mb-5 text-white">
+                <h1 class="pt-4 mb-0">Posts</h1>
+                <a href="/posts/create" class="btn btn-dark btn-sm btn-block">Create a post</a>
+                <a href="/posts/my" class="btn btn-dark btn-sm btn-block">My posts only</a>
+            </div>
+        </div>
     </div>
-<% end %>
+
+    <div class="bg-light p-4 d-flex justify-content-end text-center">
+        <ul class="list-inline mb-0">
+            <li class="list-inline-item">
+                <div class="font-weight-bold mb-0 h5 d-block"><%= @count %></div>
+                <small class="text-muted"> <i class="fa fa-picture-o mr-1"></i>Total</small>
+            </li>
+        </ul>
+    </div>
+
+    <div class="py-4 px-4">
+        <div class="py-4">
+            <h5 class="mb-3">Recent posts</h5>
+
+            <div class='row posts-row' id='posts'>
+            <%= turbo_stream.prepend "posts" do %>
+              <%= render partial: "post", collection: @posts %>
+            <% end %>
+            </div>
+        </div>
+    </div>
 </div>
-<% else %>
-There are no posts, not yet. Be <a href="/posts/create">the first to create</a>
-<% end %>

@@ -1,14 +1,15 @@
-<div class="card" style="width: 18rem;">
-  <div class="card-header">
-    Friend request from
+<%= turbo_frame_tag dom_id(pending), class: 'col-lg-4',
+    data: { controller: 'friend' } do %>
+  <div class="card friend">
+    <div class="card-header">
+      <a href="/users/<%=pending.id%>" data-turbo="false"><%=pending.last_name%> <%=pending.first_name%></a>
+    </div>
+    <div class="card-body">
+      <%= pending.email %>
+    </div>
+    <div class="card-footer">
+      <%= render 'accept', friend: pending %>
+      <%= render 'deny', friend: pending %>
+    </div>
   </div>
-  <div class="card-body">
-    <h5 class="card-title">
-    <%= link_to friend.last_name + " " + friend.first_name, controller: "users", action: "show", id: friend.id %>
-    </h5>
-  </div>
-  <div class="card-footer">
-    <a class="btn btn-success acceptFriend" data-id="<%=friend.id %>" href="#" style="margin-right: 10px">Accept</a>
-    <a class="btn btn-danger denyFriend" data-id="<%=friend.id %>" href="#">Deny</a>
-  </div>
-</div>
+<% end %>

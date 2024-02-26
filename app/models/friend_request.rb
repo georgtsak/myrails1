@@ -14,10 +14,10 @@ class FriendRequest < ApplicationRecord
   end
 
   def self.find_request(id1, id2)
-    if FriendRequest.where(user_id: id1, friend_id: id2, accepted: true).empty?
-      FriendRequest.where(user_id: id2, friend_id: id1, accepted: true)[0].id
+    if !FriendRequest.where(user_id: id1, friend_id: id2).empty?
+      FriendRequest.where(user_id: id2, friend_id: id1)[0]
     else
-      FriendRequest.where(user_id: id1, friend_id: id2, accepted: true)[0].id
+      FriendRequest.where(user_id: id1, friend_id: id2)[0]
     end
   end
 end
