@@ -1,3 +1,5 @@
+<%= turbo_stream_from 'conversations' %>
+
 <div class="bg-white shadow rounded overflow-hidden">
     <div class="px-4 pt-0 pb-4 bg-dark">
         <div class="media align-items-end profile-header">
@@ -11,23 +13,29 @@
     </div>
 
     <div class="bg-light p-4 d-flex justify-content-end text-center">
+        <div class="search-block">
+          <% current_link = '/conversations/' %>
+          <%= render partial: "search", locals: {searchlink: current_link, returnlink: current_link} %>
+        </div>
         <ul class="list-inline mb-0">
             <li class="list-inline-item">
                 <div class="font-weight-bold mb-0 h5 d-block"><%= current_user.conversations.count %></div>
-                <small class="text-muted"> <i class="fa fa-picture-o mr-1"></i>Conversations</small>
+                <small class="text-muted"> <i class="fa fa-picture-o mr-1"></i>Total</small>
             </li>
         </ul>
     </div>
 
     <div class="py-4 px-4">
         <div class="py-4">
-          <%= turbo_stream_from "conversations" %>
-          <ol class="list-group" id="conversations">
-            <% @elements.each do |element| %>
-              <%= render partial: 'conversation', :locals => {:element => element} %>
-            <% end %>
-          </div>
+        <h5 class="mb-3">Recent conversations</h5>
+
+        <ol class="list-group" id="conversations">
+          <%= turbo_stream.prepend "posts" do %>
+            <%= render partial: "conversation", collection: @conversations %>
+          <% end %>
         </div>
+
+        <%==pagy_nav(@pagy) %>
     </div>
 </div>
 

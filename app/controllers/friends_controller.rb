@@ -3,7 +3,18 @@ class FriendsController < ApplicationController
         if !user_signed_in?
             redirect_to '/users/sign_in'
         else
-            @friends = current_user.friends
+            first_name_key = "%#{params[:first_name]}%"
+            last_name_key = "%#{params[:last_name]}%"
+            email_key = "%#{params[:email]}%"
+
+            post_scope = current_user.friends.where("first_name LIKE ? OR last_name LIKE ? OR email LIKE ?", first_name_key, last_name_key, email_key).all
+      
+            @search_first_name_value = params[:first_name]
+            @search_last_name_value = params[:last_name]
+            @search_email_value = params[:email]
+      
+            @pagy, @friends = pagy(post_scope.all.order(created_at: :desc), items: 10)
+            @count = current_user.friends.all.count
         end
     end
 
@@ -117,7 +128,18 @@ class FriendsController < ApplicationController
         if !user_signed_in?
             redirect_to '/users/sign_in'
         else
-            @friends = current_user.pending_received
+            first_name_key = "%#{params[:first_name]}%"
+            last_name_key = "%#{params[:last_name]}%"
+            email_key = "%#{params[:email]}%"
+
+            post_scope = current_user.pending_received.where("first_name LIKE ? OR last_name LIKE ? OR email LIKE ?", first_name_key, last_name_key, email_key).all
+      
+            @search_first_name_value = params[:first_name]
+            @search_last_name_value = params[:last_name]
+            @search_email_value = params[:email]
+      
+            @pagy, @friends = pagy(post_scope.all.order(created_at: :desc), items: 10)
+            @count = current_user.pending_received.all.count
         end
     end
 
@@ -125,7 +147,18 @@ class FriendsController < ApplicationController
         if !user_signed_in?
             redirect_to '/users/sign_in'
         else
-            @friends = current_user.pending_sent
+            first_name_key = "%#{params[:first_name]}%"
+            last_name_key = "%#{params[:last_name]}%"
+            email_key = "%#{params[:email]}%"
+
+            post_scope = current_user.pending_sent.where("first_name LIKE ? OR last_name LIKE ? OR email LIKE ?", first_name_key, last_name_key, email_key).all
+      
+            @search_first_name_value = params[:first_name]
+            @search_last_name_value = params[:last_name]
+            @search_email_value = params[:email]
+      
+            @pagy, @friends = pagy(post_scope.all.order(created_at: :desc), items: 10)
+            @count = current_user.pending_sent.all.count
         end
     end
 

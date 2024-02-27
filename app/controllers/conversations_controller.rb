@@ -2,8 +2,20 @@ class ConversationsController < ApplicationController
     def index
         redirect_login
 
-        @user = current_user
-        @elements = current_user.conversations.includes(:messages).order("messages.created_at desc")
+        name_key = "%#{params[:name]}%"
+  
+        name_exists = !params[:name].blank?
+  
+        if name_exists
+            conversations_scope = current_user.conversations.where("uid LIKE ?", name_key).all
+        else
+            conversations_scope = current_user.conversations.all
+        end
+  
+        @search_name_value = params[:name]
+
+        @pagy, @categories = pagy(conversations_scope.order(created_at: :desc), items: 10)
+        @count = @categories.count
     end
 
     def read
