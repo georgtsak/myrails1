@@ -10,7 +10,7 @@ class UsersController < ApplicationController
       redirect_to '/login'
     else
       @user = User.find(params[:id]) or not_found
-      @posts = @user.posts
+      @pagy, @posts = pagy(@user.posts.all.order(created_at: :desc), items: 10)
       @friends = @user.friends
     end
   end

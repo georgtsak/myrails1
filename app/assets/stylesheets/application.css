@@ -42,6 +42,20 @@ a:not(.btn):hover {
 .posts-form .select2 {
     max-width: 360px;
 }
+
+.search-block {
+    margin-right: auto;
+}
+
+.search-block form {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+}
+
+.search-block form > * {
+    margin-right: 10px;
+}
 /* Posts */
 /* Messages */
 .messagescontainer {

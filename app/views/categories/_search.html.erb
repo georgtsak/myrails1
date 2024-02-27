@@ -1,0 +1,5 @@
+<%= form_with(url: defined?(searchlink) ? searchlink : posts_path, method: :get, data: {turbo_frame: "posts"}) do |f| %>
+    <%= f.text_field :name, class: 'form-control', value: @search_name_value, placeholder: "name" %>
+    <%= f.submit "Search", data: { disable_with: false }, class: "btn btn-primary" %>
+    <a class="btn btn-danger" href="<%=defined?(returnlink) ? returnlink : posts_path%>">Reset</a>
+<% end %>

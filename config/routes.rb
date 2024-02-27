@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   get 'static_pages/contact'
   get "/", to: "index#index"
   
+  get "/posts/categories/:id", to: "categories#show"
+  get "/posts/categories", to: "categories#index"
+
   get "/posts/create", to: "posts#create"
   post "/posts/create", to: "posts#create"
   get "/posts/delete", to: "posts#delete"
@@ -12,9 +15,6 @@ Rails.application.routes.draw do
   get "/posts/my", to: "posts#my"
   get "/posts/:id", to: "posts#show", as: 'post'
   get "/posts", to: "posts#index"
-
-  get "/posts/categories/:id", to: "categories#show"
-  get "/posts/categories", to: "categories#index"
 
   post "/messages/create", to: "messages#create"
   post "/messages/update", to: "messages#update"

@@ -3,7 +3,26 @@ class PostsController < ApplicationController
     if !user_signed_in?
       redirect_to '/users/sign_in'
     else
-      @posts = Post.order(created_at: :desc).all
+      title_key = "%#{params[:title]}%"
+      content_key = "%#{params[:content]}%"
+
+      title_exists = !params[:title].blank?
+      content_exists = !params[:content].blank?
+
+      if title_exists && content_exists
+        post_scope = Post.where("content LIKE ?", title_key, " OR title LIKE ?", content_key).all
+      elsif title_exists && !content_exists
+        post_scope = Post.where("title LIKE ?", title_key).all
+      elsif !title_exists && content_exists
+        post_scope = Post.where("content LIKE ?", content_key).all
+      else
+        post_scope = Post.all
+      end
+
+      @search_content_value = params[:content]
+      @search_title_value = params[:title]
+
+      @pagy, @posts = pagy(post_scope.all.order(created_at: :desc), items: 10)
       @count = Post.all.count
     end
   end
@@ -20,8 +39,9 @@ class PostsController < ApplicationController
     if !user_signed_in?
       redirect_to '/users/sign_in'
     else
-      @posts = current_user.posts.order(created_at: :desc)
-      @count = current_user.posts.all.count
+      @pagy, @posts = pagy(current_user.posts.order(created_at: :desc), items: 10)
+
+      @count = current_user.posts.count
     end
   end
 

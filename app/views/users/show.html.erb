@@ -7,7 +7,7 @@
                 <% end %>
             </div>
             <div class="media-body mb-5 text-white">
-                <h4 class="pt-4 mb-0"><%=@user.last_name %> <%=@user.first_name %></h4>
+                <h1 class="pt-4 mb-0"><%=@user.last_name %> <%=@user.first_name %></h1>
                 <p class="small mb-4"> <i class="fa fa-map-marker mr-2"></i>Joined us at <%=@user.created_at %></p>
                 <% if @user.id != current_user.id %>
                     <% if !current_user.has_request?(@user) %>
@@ -46,6 +46,8 @@
                 <%= render partial: "posts/post", collection: @posts %>
                 <% end %>
             </div>
+
+            <%==pagy_nav(@pagy) %>
         </div>
     </div>
 </div>

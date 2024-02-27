@@ -10,11 +10,15 @@
                 <h1 class="pt-4 mb-0">Posts</h1>
                 <a href="/posts/create" class="btn btn-dark btn-sm btn-block">Create a post</a>
                 <a href="/posts/my" class="btn btn-dark btn-sm btn-block">My posts only</a>
+                <a href="/posts/categories/" class="btn btn-dark btn-sm btn-block">All post categories</a>
             </div>
         </div>
     </div>
 
     <div class="bg-light p-4 d-flex justify-content-end text-center">
+        <div class="search-block">
+            <%= render partial: "posts/search" %>
+        </div>
         <ul class="list-inline mb-0">
             <li class="list-inline-item">
                 <div class="font-weight-bold mb-0 h5 d-block"><%= @count %></div>
@@ -28,10 +32,12 @@
             <h5 class="mb-3">Recent posts</h5>
 
             <div class='row posts-row' id='posts'>
-            <%= turbo_stream.prepend "posts" do %>
-              <%= render partial: "post", collection: @posts %>
-            <% end %>
+                <%= turbo_stream.prepend "posts" do %>
+                    <%= render partial: "posts/post", collection: @posts %>
+                <% end %>
             </div>
+
+            <%==pagy_nav(@pagy) %>
         </div>
     </div>
 </div>
