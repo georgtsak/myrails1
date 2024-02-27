@@ -2,13 +2,10 @@
     <div class="px-4 pt-0 pb-4 bg-dark">
         <div class="media align-items-end profile-header">
             <div class="profile mr-3">
-                <% if ( @user.id == current_user.id ) %>
-                <a href="/edit" class="btn btn-dark btn-sm btn-block">Edit profile</a>
-                <% end %>
+                
             </div>
             <div class="media-body mb-5 text-white">
                 <h1 class="pt-4 mb-0"><%=@user.last_name %> <%=@user.first_name %></h1>
-                <p class="small mb-4"> <i class="fa fa-map-marker mr-2"></i>Joined us at <%=@user.created_at %></p>
                 <% if @user.id != current_user.id %>
                     <% if !current_user.has_request?(@user) %>
                         <%= render 'friends/add', friend: @user, btnclass: 'btn btn-dark btn-sm btn-block', btntext: 'Add friend' %> 
@@ -20,12 +17,19 @@
                     <a href="" class="btn btn-dark btn-sm btn-block">Send a message</a>
                     <% end %>
                 <% end %>
+                <% if ( @user.id == current_user.id ) %>
+                <a href="/edit" class="btn btn-dark btn-sm btn-block">Edit profile</a>
+                <% end %>
             </div>
         </div>
     </div>
 
     <div class="bg-light p-4 d-flex justify-content-end text-center">
         <ul class="list-inline mb-0">
+            <li class="list-inline-item">
+                <h5 class="font-weight-bold mb-0 d-block"><%=@user.created_at %></h5>
+                <small class="text-muted"> <i class="fa fa-picture-o mr-1"></i>Joined us at</small>
+            </li>
             <li class="list-inline-item">
                 <h5 class="font-weight-bold mb-0 d-block"><%=@posts.count %></h5>
                 <small class="text-muted"> <i class="fa fa-picture-o mr-1"></i>Posts</small>

@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
 
+  devise_for :users, :path => '', :path_names => { :sign_in => "login", :sign_out => "logout", :sign_up => "register" }
+
   get 'notifications/index'
   get 'static_pages/contact'
   get "/", to: "index#index"
@@ -40,5 +42,4 @@ Rails.application.routes.draw do
   get '/friends', to: 'friends#index'
 
   resources :users, only: [:index, :show]
-  devise_for :users, :path => '', :path_names => { :sign_in => "login", :sign_out => "logout", :sign_up => "register" }
 end
