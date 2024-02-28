@@ -41,6 +41,7 @@ class ConversationsController < ApplicationController
 
     def read
         redirect_login
+        @user = current_user
 
         @conversation = Conversation.find(params[:id]) or not_found
         @current_user = current_user
@@ -72,12 +73,15 @@ class ConversationsController < ApplicationController
 
         if conversation_create_params[:direct]
             @conversation.direct = true
-            @existing_conversation = current_user.find_direct_with(User.find(conversation_create_params[:users][0]))[0]
+            direct_user = User.find(conversation_create_params[:users][0])
+            @existing_conversation = current_user.find_direct_with(direct_user)[0]
 
             if @existing_conversation
                 redirect_to @existing_conversation
                 return
             end
+
+            @conversation.uid = "Direct messages with #{direct_user.last_name} #{direct_user.first_name}"
         end
 
         conversation_create_params[:users].each do |user|

@@ -8,7 +8,7 @@
       <%= sent.email %>
     </div>
     <div class="card-footer">
-      Sent at: <%=sent.created_at%>
+      Sent at: <%=sent.created_at.strftime('%d.%m.%Y %H:%M')%>
     </div>
   </div>
 <% end %>

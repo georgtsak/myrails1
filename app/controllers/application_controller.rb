@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
     include Pagy::Backend
 
+    before_action :set_user
+
     def not_found
         raise ActionController::RoutingError.new('Not Found')
     end
@@ -18,5 +20,9 @@ class ApplicationController < ActionController::Base
     def configure_permitted_parameters
         devise_parameter_sanitizer.permit(:sign_up) { |u| u.permit(:first_name, :last_name, :email, :password)}
         devise_parameter_sanitizer.permit(:account_update) { |u| u.permit(:first_name, :last_name, :email, :password, :current_password)}
+    end
+  
+    def set_user
+      cookies[:username] = current_user.id || 0
     end
 end

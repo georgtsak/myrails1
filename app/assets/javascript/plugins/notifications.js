@@ -23,7 +23,7 @@ function subscribeForNotifications() {
         
         if (msg.message) {
             if (msg.message.type === 'message') {
-                updateConversation(msg.message.conversation, msg.message.message)
+                updateConversation(msg.message.conversation, msg.message.message, msg.message.user)
             } else if (msg.message.type === 'friend') {
                 switch (msg.message.subtype) {
                     case 'create':

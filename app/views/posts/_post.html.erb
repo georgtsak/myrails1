@@ -24,6 +24,6 @@
                 <% end %>
             <% end %>
         </ul>
-        <p><%= post.created_at %></p>
+        <p><%= post.created_at.strftime('%d.%m.%Y %H:%M') %></p>
     </div>
 <% end %>

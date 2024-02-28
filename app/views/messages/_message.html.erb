@@ -6,10 +6,10 @@
         <%= link_to message.user_element.email + " " + message.user_element.last_name + " " + message.user_element.first_name, controller: "users", action: "show", id: message.users_id %>
       </div>
       <div class='message-date'>
-        <%= message.created_at %>
+        <%= message.created_at.strftime('%d.%m.%Y %H:%M') %>
         <% if message.edited? %>
         <div class='col'>
-          <span class='fw-light fs-7'>edited <%= message.updated_at %></span>
+          <span class='fw-light fs-7'>edited <%= message.updated_at.strftime('%d.%m.%Y %H:%M') %></span>
         </div>
       <% end %>
       </div>

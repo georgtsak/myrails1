@@ -14,8 +14,7 @@ class MessagesController < ApplicationController
                     message_object = {
                         type: 'message',
                         conversation: @conversation,
-                        message: @message,
-                        user: current_user
+                        message: @message
                     }
     
                     NotificationsChannel.broadcast_to("notifications:" + user.id.to_s, message_object)

@@ -23,7 +23,7 @@ $(document).on('turbo:load', function() {
     }
 })
 
-function updateConversation(conversation, message) {
+function updateConversation(conversation, message, user) {
     request = $.ajax({
         url: "/messages/" + message.id,
         type: "GET"
@@ -31,7 +31,7 @@ function updateConversation(conversation, message) {
 
     request.done(function (response, textStatus, jqXHR){
         Turbo.renderStreamMessage(response)
-        if (message.users_id !== message.user.id) {
+        if (message.users_id !== parseInt(getCookie('username'))) {
             showNotification('New message!', message.content.substring(0, 40), 'message_notification_' + message.id)
         }
     })

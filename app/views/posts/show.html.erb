@@ -14,12 +14,12 @@
     <div class="bg-light p-4 d-flex justify-content-end text-center">
         <ul class="list-inline mb-0">
             <li class="list-inline-item">
-                <div class="font-weight-bold mb-0 h5 d-block"><%= @post.created_at %></div>
+                <div class="font-weight-bold mb-0 h5 d-block"><%= @post.created_at.strftime('%d.%m.%Y %H:%M') %></div>
                 <small class="text-muted"> <i class="fa fa-picture-o mr-1"></i>Created</small>
             </li>
             <% if @post.updated_at != @post.created_at %>
             <li class="list-inline-item">
-                <div class="font-weight-bold mb-0 h5 d-block"><%= @post.updated_at %></div>
+                <div class="font-weight-bold mb-0 h5 d-block"><%= @post.updated_at.strftime('%d.%m.%Y %H:%M') %></div>
                 <small class="text-muted"> <i class="fa fa-picture-o mr-1"></i>Updated</small>
             </li>
             <% end %>
