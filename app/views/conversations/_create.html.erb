@@ -1,4 +1,12 @@
-<%= form_with(model: friend, url: friends_new_path, remote: true, method: :post ) do |f| %>
-    <%= f.hidden_field :id, value: friend.id %>
-    <%= f.submit defined?(btntext) ? btntext : "Add a friend", data: { disable_with: false }, class: defined?(btnclass) ? btnclass : "btn btn-success" %>
+<%= form_with(model: @conversation, url: conversations_create_path, remote: true, method: :post, id: 'createconversation' ) do |f| %>
+    <div class="field mb-3">
+        <%= f.label :name, class: 'form-label' %><br />
+        <%= f.text_field :uid, class: 'form-control' %>
+    </div>
+    <div class="field mb-3">
+        <%= f.label :friends, class: 'form-label' %><br />
+        <%= select_tag('conversation[users]', options_from_collection_for_select([], :id, :email), {:class => 'select-friends', :multiple => true, :style => 'width: 100%'}) %>
+    </div>
+    <div id="createconv_message"></div>
+    <%= f.submit defined?(btntext) ? btntext : "Create a conversation", class: defined?(btnclass) ? btnclass : "btn btn-default btn-primary btn-block w-100" %>
 <% end %>

@@ -1,3 +1,8 @@
-<li class="list-group-item">
-<%= link_to user.email + " " + user.last_name + " " + user.first_name, controller: "users", action: "show", id: user.id %>
+<li class="list-group-item d-flex justify-content-between align-items-start">
+    <div class="ms-2 me-auto">
+        <div class="fw-semibold"><%=user.email%></div>
+        <%=user.last_name%> <%=user.first_name%>
+    </div>
+    <span class="badge text-bg-primary rounded-pill" style="margin-right: 5px">DM</span>
+    <span class="badge text-bg-danger rounded-pill">Kick</span>
 </li>

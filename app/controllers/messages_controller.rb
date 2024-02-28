@@ -3,17 +3,19 @@ class MessagesController < ApplicationController
         redirect_login
 
         @conversation = Conversation.find(message_params[:conversation_id])
-        @message = @conversation.messages.create({:content => message_params[:content], :users_id => current_user.id})
-
         if @conversation.users.map(&:id).include? current_user.id
+            @message = Message.build({:content => message_params[:content], :users_id => current_user.id})
+            @conversation.messages << @message
+
             if @message.save
-                render turbo_stream: turbo_stream.prepend("messages", @message)
+                render turbo_stream: turbo_stream.prepend("messages:#{@conversation.id}", @message)
     
                 @conversation.users.each do |user|
                     message_object = {
                         type: 'message',
                         conversation: @conversation,
-                        message: @message
+                        message: @message,
+                        user: current_user
                     }
     
                     NotificationsChannel.broadcast_to("notifications:" + user.id.to_s, message_object)
@@ -34,12 +36,13 @@ class MessagesController < ApplicationController
         redirect_login
 
         @message = Message.find(params[:id])
-        @conversation = ConversationMessage.where(message_id: @message).first
-        is_user_participant = ConversationUser.where(user_id: @message.users_id, conversation_id: @conversation)
+        message_conversation = ConversationMessage.find_by_message_id(@message.id)
+        
+        @conversation = Conversation.find(message_conversation.conversation_id)
 
         if @conversation.users.map(&:id).include? current_user.id
             if @message
-                render turbo_stream: turbo_stream.prepend("messages", @message)
+                render turbo_stream: turbo_stream.prepend("messages:#{@conversation.id}", @message)
             end
         else
             render json: { error: @message.errors.full_messages.join(', ') }, status: :unauthorized

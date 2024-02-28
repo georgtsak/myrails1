@@ -30,7 +30,7 @@
         <h5 class="mb-3">Recent conversations</h5>
 
         <ol class="list-group" id="conversations">
-          <%= turbo_stream.prepend "posts" do %>
+          <%= turbo_stream.prepend "conversations" do %>
             <%= render partial: "conversation", collection: @conversations %>
           <% end %>
         </div>
@@ -48,34 +48,19 @@
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
-      <%= form_for :conversation, :id => 'createConversationForm' do |f| %>
-        <div class="field mb-3">
-          <%= f.label :name, class: 'form-label' %><br />
-          <%= f.text_field :name, class: 'form-control' %>
-        </div>
-
-        <div class="field mb-3">
-          <%= f.label :friends, class: 'form-label' %><br />
-          <%= select_tag('users[]', options_from_collection_for_select([], :id, :email), {:class => 'select-friends', :multiple => true, :style => 'width: 100%'}) %>
-        </div>
-
-        <%= f.submit "Create", class: 'btn btn-default btn-primary btn-block' %>
-      <% end %>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      <%= render partial: "create" %>
     </div>
   </div>
 </div>
 
 <script>
-$(window).on('load', function() {
+(function () {
   function formatFriend (friend) {
     var $friend = $(
       '<span>' + friend.email + ': ' + friend.last_name + " " + friend.first_name + '' + '</span>'
-    );
-    return $friend;
-  };
+    )
+    return $friend
+  }
 
   $(".select-friends").select2({
     templateResult: formatFriend,
@@ -101,45 +86,4 @@ $(window).on('load', function() {
       cache: true
     }
   })
-
-  $('#createConversationForm').on('submit', function(event) {
-    event.preventDefault()
-
-    const formValues = $('#createConversationForm').serializeArray()
-    let values = {}
-
-    for (let i = 0; i < formValues.length; i++) {
-      if (formValues[i].name === 'conversation[name]') {
-        values['conversation'] = {}
-        values.conversation.name = formValues[i].value
-      }
-    }
-
-    delete values['users[]']
-    values['user'] = {}
-    values['user']['ids'] = []
-    const realUsers = $(".select-friends").select2('data')
-
-    for (let i = 0; realUsers.length > i; i++) {
-      values['user']['ids'].push(realUsers[i]['id'])
-    }
-
-    request = $.ajax({
-      url: "/conversations/create",
-      type: "POST",
-      data: JSON.stringify(values),
-      contentType: "application/json; charset=utf-8",
-      headers: {
-        "X-CSRF-Token": values['authenticity_token']
-      },
-      beforeSend(xhr) {
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-      }
-    })
-
-    request.done(function (response, textStatus, jqXHR){
-        console.log(response)
-    })
-  })
-})
-</script>
+})();
