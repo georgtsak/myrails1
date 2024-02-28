@@ -1,14 +1,35 @@
 class UsersController < ApplicationController
   def index
+    if !user_signed_in?
+      redirect_to '/login'
+    end
     @users = User.all
   end
   def show
-    @user = User.find(params[:id])
+    if !user_signed_in?
+      redirect_to '/login'
+    else
+      @user = User.find(params[:id]) or not_found
+      @pagy, @posts = pagy(@user.posts.all.order(created_at: :desc), items: 10)
+      @friends = @user.friends
+    end
+  end
+  def me
+    if !user_signed_in?
+      redirect_to '/login'
+    end
+    @user = current_user
   end
   def new
+    if !user_signed_in?
+      redirect_to '/login'
+    end
     @user = User.new
   end
   def create
+    if !user_signed_in?
+      redirect_to '/login'
+    end
     @user = User.new(user_params)
     if @user.save
       redirect_to @user, notice: 'User was successfully created.'
@@ -16,26 +37,8 @@ class UsersController < ApplicationController
       render :new
     end
   end
-  def contacts
-    @user = current_user
-    @contacts = current_user.friends
-    
-    render json: { message: 'Success', data: @contacts }, status: :ok
-  end
-  def add_contact
-    @user = current_user
-    @contact = @user.contacts.build(recipient_id: params[:recipient_id])
-
-    if @contact.save
-      flash[:success] = "Contact added successfully!"
-    else
-      flash[:error] = "Unable to add contact."
-    end
-
-    redirect_to users_path
-  end
   private
   def user_params
-    params.require(:user).permit(:username, :email, :password)
+    params.require(:user).permit(:first_name, :last_name, :username, :email, :password)
   end
 end

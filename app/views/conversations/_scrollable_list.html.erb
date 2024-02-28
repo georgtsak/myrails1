@@ -1,0 +1,6 @@
+<%= turbo_frame_tag "messages-page-#{@pagy.page}" do %>
+<%= turbo_stream.append "messages:#{@conversation.id}" do %>
+    <%= render partial: "messages/message", collection: @messages %>
+<% end %>
+<%= render partial: "next_page" %>
+<% end %>

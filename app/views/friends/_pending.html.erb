@@ -1,0 +1,15 @@
+<%= turbo_frame_tag dom_id(pending), class: 'col-lg-4',
+    data: { controller: 'friend' } do %>
+  <div class="card friend">
+    <div class="card-header">
+      <a href="/users/<%=pending.id%>" data-turbo="false"><%=pending.last_name%> <%=pending.first_name%></a>
+    </div>
+    <div class="card-body">
+      <%= pending.email %>
+    </div>
+    <div class="card-footer">
+      <%= render 'accept', friend: pending %>
+      <%= render 'deny', friend: pending %>
+    </div>
+  </div>
+<% end %>

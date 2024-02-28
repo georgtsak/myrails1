@@ -1,0 +1,6 @@
+<%= form_with(model: Conversation, url: conversations_create_path, remote: true, method: :post) do |f| %>
+    <%= f.hidden_field :users, :multiple => true, :value => @user.id %>
+    <%= f.hidden_field :uid, value: 'Direct messages with ' + @user.last_name + ' ' + @user.first_name %>
+    <%= f.hidden_field :direct, value: 1 %>
+    <%= f.submit defined?(btntext) ? btntext : "Add a friend", data: { disable_with: false }, class: defined?(btnclass) ? btnclass : "btn btn-dark btn-sm btn-block", style: 'display: block; border: none' %>
+<% end %>

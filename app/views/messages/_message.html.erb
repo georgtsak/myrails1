@@ -1,16 +1,24 @@
-<div class="card message <% if element.users_id == current_user.id %>border-success<% end %>">
-  <div class="card-header">
-    <%= User.find(element.users_id).email %>
+<%= turbo_frame_tag dom_id(message),
+    data: { controller: 'message', action: 'mouseout->message#toggleActions mouseover->message#toggleActions', 'message-author-id-value': message.users_id } do %>
+  <div class="message">
+    <div class="message-content">
+      <div class="message-user">
+        <%= link_to message.user_element.email + " " + message.user_element.last_name + " " + message.user_element.first_name, controller: "users", action: "show", id: message.users_id %>
+      </div>
+      <div class='message-date'>
+        <%= message.created_at.strftime('%d.%m.%Y %H:%M') %>
+        <% if message.edited? %>
+        <div class='col'>
+          <span class='fw-light fs-7'>edited <%= message.updated_at.strftime('%d.%m.%Y %H:%M') %></span>
+        </div>
+      <% end %>
+      </div>
+      <div class='col invisible' data-message-target='actions'>
+        
+      </div>
+      <div class='formatted-content'>
+        <%= message.content %>
+      </div>
+    </div>
   </div>
-  <div class="card-body">
-    <p class="card-text">
-      <%= element.content %>
-    </p>
-  </div>
-  <div class="card-footer">
-    <%= element.created_at.strftime('%d.%m.%Y %H:%M') %>
-    <% if element.updated_at != element.created_at %>
-        | <%= element.updated_at.strftime('%d.%m.%Y %H:%M') %>
-    <% end %>
-  </div>
-</div>
+<% end %>

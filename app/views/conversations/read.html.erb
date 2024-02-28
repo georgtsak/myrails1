@@ -1,0 +1,56 @@
+<%= turbo_stream_from @conversation %>
+
+<script>
+(function(){
+$('.messagescontainer').height($(window).height() - 300)
+}())
+</script>
+
+<div class="bg-white shadow rounded overflow-hidden">
+    <div class="px-4 pt-0 pb-4 bg-dark">
+        <div class="media align-items-end profile-header">
+            <div class="media-body mb-5 text-white">
+                <h1 class="pt-4 mb-0">
+                <% if !@conversation.direct %>
+                <%=@conversation.uid %>
+                <% else %>
+                <% current_conversant = @conversation.users.where.not(id: current_user.id).first %>
+                Direct messages with <%=current_conversant.last_name %> <%=current_conversant.first_name %>
+                <% end %>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-4 px-4">
+        <div class="py-4">
+        <h5 class="mb-3">Recent messages</h5>
+
+      <div class="row">
+        <div class="col-lg-8">
+          <div class='flex-grow-1 messagescontainer d-flex flex-column-reverse overflow-auto message-list' id='messages:<%=@conversation.id%>'>
+            <% if @pagy.next.present? %>
+              <%= render partial: "next_page" %>
+            <% end %>
+      
+            <%= turbo_stream.prepend "messages:#{@conversation.id}" do %>
+              <%= render partial: "messages/message", collection: @messages %>
+            <% end %>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <h2 class="h1">Users</h2>
+          <ul class="messagesusers list-group" id="users">
+            <%= turbo_stream.prepend "users" do %>
+              <%= render partial: "user", collection: @users %>
+            <% end %>
+          </div>
+        </div>
+        <div class="row">
+          <%= turbo_frame_tag @message, class: 'mt-4 col-lg-8' do %>
+            <%= render 'messages/form', message: @new_message %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+</div>

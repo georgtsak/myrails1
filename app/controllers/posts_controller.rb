@@ -3,7 +3,27 @@ class PostsController < ApplicationController
     if !user_signed_in?
       redirect_to '/users/sign_in'
     else
-      @posts = Post.order(created_on: :desc).all()
+      title_key = "%#{params[:title]}%"
+      content_key = "%#{params[:content]}%"
+
+      title_exists = !params[:title].blank?
+      content_exists = !params[:content].blank?
+
+      if title_exists && content_exists
+        post_scope = Post.where("content LIKE ?", title_key, " OR title LIKE ?", content_key).all
+      elsif title_exists && !content_exists
+        post_scope = Post.where("title LIKE ?", title_key).all
+      elsif !title_exists && content_exists
+        post_scope = Post.where("content LIKE ?", content_key).all
+      else
+        post_scope = Post.all
+      end
+
+      @search_content_value = params[:content]
+      @search_title_value = params[:title]
+
+      @pagy, @posts = pagy(post_scope.all.order(created_at: :desc), items: 10)
+      @count = Post.all.count
     end
   end
 
@@ -19,8 +39,9 @@ class PostsController < ApplicationController
     if !user_signed_in?
       redirect_to '/users/sign_in'
     else
-      @posts = Post.where("creator_id" => current_user.id).all()
-      render index
+      @pagy, @posts = pagy(current_user.posts.order(created_at: :desc), items: 10)
+
+      @count = current_user.posts.count
     end
   end
 
@@ -34,41 +55,27 @@ class PostsController < ApplicationController
     if request.get?
       
     elsif request.post?
-      @post = Post.new({:title => params[:post][:title], :content => params[:post][:content], :creator => @user})
-      
-      if @post.save
-        @message = 'Successfully created!'
-        @error = false
+      @post = @user.posts.create(title: params[:post][:title], content: params[:post][:content])
+      current_categories = []
 
-        params[:categories].each do |category|
-          temp_item = Category.find_by(name: category)
-  
-          if temp_item
-            posts_category = PostsCategory.new({:post => @post, :category => temp_item})
-            if posts_category.save
-            else
-              @message = 'Cant attach a category to a post.'
-              @error = true
-            end
-          else
-            new_category = Category.new({:name => category})
-            if new_category.save
-              posts_category = PostsCategory.new({:post => @post, :category => new_category})
-              if posts_category.save
-              else
-                @message = 'Cant attach a category to a post.'
-                @error = true
-              end
-            else
-              @message = 'Cant create a category.'
-              @error = true
-            end
+      params[:categories].each do |category|
+        found_category = Category.find_by(name: category.downcase)
+
+        if found_category
+          current_categories.push(found_category)
+        else
+          new_category = Category.new(:name => category.downcase)
+          if (new_category.save)
+            current_categories.push(new_category)
           end
         end
-      else
-        @message = 'Cant create a post.'
-        @error = true
       end
+
+      current_categories.each do |category|
+        @post.categories << category
+      end
+
+      redirect_to @post
     else
       raise Exception.new "Unimplemented route"
     end

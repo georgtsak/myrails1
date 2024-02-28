@@ -1,0 +1,5 @@
+<%= form_with(model: [@conversation, @message], data: { action: 'turbo:submit-end->messages#resetForm' }, url: '/messages/create', remote: true, class: "d-flex", id: 'messageform' ) do |f| %>
+    <%= f.hidden_field :conversation_id, value: @conversation.id %>
+    <%= f.text_area :content, id: 'chat-text', class: "form-control msg-content", style: 'margin-right: 20px', autocomplete: 'off' %>
+    <%= f.submit data: { disable_with: false }, class: "btn btn-primary" %>
+<% end %>

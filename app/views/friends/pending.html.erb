@@ -1,0 +1,39 @@
+<div class="bg-white shadow rounded overflow-hidden">
+    <div class="px-4 pt-0 pb-4 bg-dark">
+        <div class="media align-items-end profile-header">
+            <div class="media-body mb-5 text-white">
+                <h1 class="pt-4 mb-0">Pending Friends</h1>
+                <a href="/friends/" class="btn btn-dark btn-sm btn-block">
+                  All friends
+                </a>
+                <a href="/friends/sent" class="btn btn-dark btn-sm btn-block">
+                  Sent
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-light p-4 d-flex justify-content-end text-center">
+        <div class="search-block">
+            <% current_link = '/friends/pending' %>
+            <%= render partial: "search", locals: {searchlink: current_link, returnlink: current_link} %>
+        </div>
+        <ul class="list-inline mb-0">
+            <li class="list-inline-item">
+                <div class="font-weight-bold mb-0 h5 d-block"><%= @friends.count %></div>
+                <small class="text-muted"> <i class="fa fa-picture-o mr-1"></i>Total</small>
+            </li>
+        </ul>
+    </div>
+
+    <div class="py-4 px-4">
+        <div class="py-4">
+            <%= turbo_stream_from 'friends' %>
+            <div class='row posts-row' id='friends'>
+            <%= turbo_stream.prepend "friends" do %>
+              <%= render partial: "pending", collection: @friends %>
+            <% end %>
+            </div>
+        </div>
+    </div>
+</div>

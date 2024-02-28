@@ -1,0 +1,93 @@
+<%= turbo_stream_from 'conversations' %>
+
+<div class="bg-white shadow rounded overflow-hidden">
+    <div class="px-4 pt-0 pb-4 bg-dark">
+        <div class="media align-items-end profile-header">
+            <div class="media-body mb-5 text-white">
+                <h1 class="pt-4 mb-0">Conversations</h1>
+                <a href="/conversations/direct" class="btn btn-dark btn-sm btn-block">
+                  Direct conversations
+                </a>
+                <a href="#" class="btn btn-dark btn-sm btn-block" data-bs-toggle="modal" data-bs-target="#createConvModal">
+                  New conversation
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-light p-4 d-flex justify-content-end text-center">
+        <div class="search-block">
+          <% current_link = '/conversations/' %>
+          <%= render partial: "search", locals: {searchlink: current_link, returnlink: current_link} %>
+        </div>
+        <ul class="list-inline mb-0">
+            <li class="list-inline-item">
+                <div class="font-weight-bold mb-0 h5 d-block"><%= current_user.conversations.count %></div>
+                <small class="text-muted"> <i class="fa fa-picture-o mr-1"></i>Total</small>
+            </li>
+        </ul>
+    </div>
+
+    <div class="py-4 px-4">
+        <div class="py-4">
+        <h5 class="mb-3">Recent conversations</h5>
+
+        <ol class="list-group" id="conversations">
+          <%= turbo_stream.prepend "conversations" do %>
+            <%= render partial: "conversation", collection: @conversations %>
+          <% end %>
+        </div>
+
+        <%==pagy_nav(@pagy) %>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="createConvModal" tabindex="-1" aria-labelledby="createConvModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title h1 fs-5" id="createConvModalLabel">Create conversation</div>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <%= render partial: "create" %>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  function formatFriend (friend) {
+    var $friend = $(
+      '<span>' + friend.email + ': ' + friend.last_name + " " + friend.first_name + '' + '</span>'
+    )
+    return $friend
+  }
+
+  $(".select-friends").select2({
+    templateResult: formatFriend,
+    templateSelection: formatFriend,
+    multiple: true,
+    tags: false,
+    delay: 400,
+    dropdownParent: $('#createConvModal'),
+    ajax: {
+      url: '/friends/list',
+      dataType: 'json',
+      data: function (params) {
+        var query = {
+          search: params.term
+        }
+        return query
+      },
+      processResults: function (data) {
+        return {
+          results: data.data
+        };
+      },
+      cache: true
+    }
+  })
+})();
+</script>

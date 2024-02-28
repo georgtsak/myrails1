@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_13_113909) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_22_160315) do
   create_table "categories", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -39,6 +39,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_13_113909) do
     t.string "uid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "direct"
+  end
+
+  create_table "friend_requests", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "friend_id"
+    t.boolean "accepted", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_friend_requests_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -77,10 +87,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_13_113909) do
   create_table "posts", force: :cascade do |t|
     t.string "title"
     t.string "content"
-    t.integer "creator_id", null: false
+    t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["creator_id"], name: "index_posts_on_creator_id"
+    t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
   create_table "posts_categories", force: :cascade do |t|
@@ -98,8 +108,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_13_113909) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "first_name", null: false
+    t.string "last_name", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["id"], name: "index_users_on_id", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -109,8 +126,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_13_113909) do
   add_foreign_key "conversation_messages", "messages"
   add_foreign_key "conversation_users", "conversations"
   add_foreign_key "conversation_users", "users"
+  add_foreign_key "friend_requests", "users"
   add_foreign_key "messages", "users", column: "users_id"
-  add_foreign_key "posts", "users", column: "creator_id"
+  add_foreign_key "posts", "users"
   add_foreign_key "posts_categories", "categories"
   add_foreign_key "posts_categories", "posts"
 end

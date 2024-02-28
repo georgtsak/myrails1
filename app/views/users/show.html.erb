@@ -1,2 +1,57 @@
-<h2>Personal Contacts</h2>
-<%= render 'contacts' %>
+<div class="bg-white shadow rounded overflow-hidden">
+    <div class="px-4 pt-0 pb-4 bg-dark">
+        <div class="media align-items-end profile-header">
+            <div class="profile mr-3">
+                
+            </div>
+            <div class="media-body mb-5 text-white">
+                <h1 class="pt-4 mb-0"><%=@user.last_name %> <%=@user.first_name %></h1>
+                <% if @user.id != current_user.id %>
+                    <% if !current_user.has_request?(@user) %>
+                        <%= render 'friends/add', friend: @user, btnclass: 'btn btn-dark btn-sm btn-block', btntext: 'Add friend' %> 
+                    <% end %>
+                    <% if current_user.friend_with?(@user) %>
+                        <%= render 'friends/deny', friend: @user, btnclass: 'btn btn-dark btn-sm btn-block', btntext: 'Remove friend' %>
+                    <% end %>
+                    <% if current_user.friend_with?(@user) %>
+                        <%= render 'direct', user: current_user, btnclass: 'btn btn-dark btn-sm btn-block', btntext: 'Send a message' %>
+                    <% end %>
+                <% end %>
+                <% if ( @user.id == current_user.id ) %>
+                <a href="/edit" class="btn btn-dark btn-sm btn-block">Edit profile</a>
+                <% end %>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-light p-4 d-flex justify-content-end text-center">
+        <ul class="list-inline mb-0">
+            <li class="list-inline-item">
+                <h5 class="font-weight-bold mb-0 d-block"><%= @user.created_at.strftime('%d.%m.%Y') %></h5>
+                <small class="text-muted"> <i class="fa fa-picture-o mr-1"></i>Joined us at</small>
+            </li>
+            <li class="list-inline-item">
+                <h5 class="font-weight-bold mb-0 d-block"><%=@posts.count %></h5>
+                <small class="text-muted"> <i class="fa fa-picture-o mr-1"></i>Posts</small>
+            </li>
+            <li class="list-inline-item">
+                <h5 class="font-weight-bold mb-0 d-block"><%=@friends.count %></h5>
+                <small class="text-muted"> <i class="fa fa-user-circle-o mr-1"></i>Friends</small>
+            </li>
+        </ul>
+    </div>
+
+    <div class="py-4 px-4">
+        <div class="py-4">
+            <h5 class="mb-3">Recent posts</h5>
+
+            <div class='row posts-row' id='posts'>
+                <%= turbo_stream.prepend "posts" do %>
+                <%= render partial: "posts/post", collection: @posts %>
+                <% end %>
+            </div>
+
+            <%==pagy_nav(@pagy) %>
+        </div>
+    </div>
+</div>

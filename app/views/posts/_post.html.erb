@@ -1,26 +1,29 @@
-<div class="card post">
-    <div class="card-body">
-        <% if post && post.title %>
-        <div class="card-title">
-            <%= post.title %>
-        </div>
-        <% end %>
-        <div class="card-subtitle mb-2 text-body-secondary">
-        <%= post.creator.email %>
-        </div>
-        <% if post && post.content %>
-        <div class="card-text">
-            <%= post.content %>
-        </div>
-        <% end %>
-        <% if post %>
-            <% tags = PostsCategory.where(post: post).all %>
-            <% if tags %>
-                <% tags.each do |tag| %>
-                    <% current_hashtag = Category.find(tag.id).name %>
-                    <%= link_to current_hashtag, controller: "categories", action: "show", id: current_hashtag %>
+<%= turbo_frame_tag dom_id(post), class: 'col-lg-6 post',
+    data: { controller: 'post', 'post-author-id-value': post.user_id } do %>
+    <div class="p-4 bg-light rounded shadow-sm" style="position: relative">
+        <p>
+            <a href="/posts/<%=post.id%>" data-turbo="false"><%=post.title%></a>
+        </p>
+        <p style="position: absolute; right: 1.5rem; top: 1.5rem">
+            <a href="/users/<%=post.user.id%>" data-turbo="false"><%=post.user.last_name%> <%=post.user.first_name%></a>
+        </p>    
+        <p class="font-italic mb-0">
+            <%= post.content.truncate(160, separator: ' ') %>
+        </p>
+        <ul class="list-inline small text-muted mt-3 mb-0">
+            <% if post %>
+                <% tags = post.categories %>
+                <% if tags %>
+                    <% tags.each do |tag| %>
+                        <li class="list-inline-item">
+                            <a href="/posts/categories/<%=tag.name%>" data-turbo="false">
+                                <%=tag.name%>
+                            </a>
+                        </li>
+                    <% end %>
                 <% end %>
             <% end %>
-        <% end %>
+        </ul>
+        <p><%= post.created_at.strftime('%d.%m.%Y %H:%M') %></p>
     </div>
-</div>
+<% end %>

@@ -1,0 +1,9 @@
+<li class="list-group-item d-flex justify-content-between align-items-start">
+    <div class="ms-2 me-auto">
+        <div class="fw-semibold"><%=user.email%></div>
+        <a href="/users/<%=user.id%>"><%=user.last_name%> <%=user.first_name%></a>
+    </div>
+    <% if !@conversation.direct && user != current_user %>
+    <%= render 'direct', user: current_user, btnclass: 'badge text-bg-primary rounded-pill', btntext: 'DM' %>
+    <% end %>
+</li>

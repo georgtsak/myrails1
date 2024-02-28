@@ -1,0 +1,7 @@
+<% if @pagy.next.present? %>
+<%= render partial: "next_page" %>
+<% end %>
+
+<%= turbo_stream.prepend "messages:#{@conversation.id}" do %>
+<%= render partial: "messages/message", collection: @messages %>
+<% end %>

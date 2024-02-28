@@ -1,0 +1,6 @@
+<%= turbo_frame_tag dom_id(category), class: 'col-lg-3 post',
+    data: { controller: 'category' } do %>
+    <div class="p-4 bg-light rounded shadow-sm" style="position: relative">
+        <a href="/posts/categories/<%=category.name%>" data-turbo="false"><%=category.name%> (<%=category.posts.count%>)</a>
+    </div>
+<% end %>

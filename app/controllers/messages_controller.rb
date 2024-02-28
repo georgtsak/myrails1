@@ -1,75 +1,60 @@
 class MessagesController < ApplicationController
-    def index
-        if !user_signed_in?
-            redirect_to '/users/sign_in'
-        else
-            @user = current_user
-            @elements = current_user.conversations.all
-        end
-    end
-
-    def show
-        if !user_signed_in?
-            redirect_to '/users/sign_in'
-        else
-            @contacts = current_user.contacts
-            @conversation = Conversation.find(params[:id]) or not_found
-            @messages = @conversation.messages
-        end
-    end
-
-    def createconv
-        if !user_signed_in?
-            redirect_to '/users/sign_in'
-        else
-            @conversation = Conversation.new({ :uid => conversation_create_params[:name], :user_ids => user_params[:ids].push(current_user.id) })
-            if @conversation.save
-                render json: { message: 'Conversation created successfully' }, status: :created
-            else
-                render json: { error: @conversation.errors.full_messages.join(', ') }, status: :unprocessable_entity
-            end
-        end
-    end
-
     def create
-        if !user_signed_in?
-            redirect_to '/users/sign_in'
-        else
-            current_conversation = Conversation.find(conversation_params[:id])
-            message = current_conversation.messages.create({ :content => message_params[:content], :users_id => current_user.id})
+        redirect_login
 
-            if message.save
-                render json: { message: 'Message sent successfully' }, status: :created
+        @conversation = Conversation.find(message_params[:conversation_id])
+        if @conversation.users.map(&:id).include? current_user.id
+            @message = Message.build({:content => message_params[:content], :users_id => current_user.id})
+            @conversation.messages << @message
+
+            if @message.save
+                render turbo_stream: turbo_stream.prepend("messages:#{@conversation.id}", @message)
+    
+                @conversation.users.each do |user|
+                    message_object = {
+                        type: 'message',
+                        conversation: @conversation,
+                        message: @message
+                    }
+    
+                    NotificationsChannel.broadcast_to("notifications:" + user.id.to_s, message_object)
+                end
             else
-                render json: { error: message.errors.full_messages.join(', ') }, status: :unprocessable_entity
+                render json: { error: @message.errors.full_messages.join(', ') }, status: :unprocessable_entity
             end
+        else
+            render json: { error: @message.errors.full_messages.join(', ') }, status: :unauthorized
         end
+    end
+
+    def update
+        redirect_login
+    end
+
+    def read
+        redirect_login
+
+        @message = Message.find(params[:id])
+        message_conversation = ConversationMessage.find_by_message_id(@message.id)
+        
+        @conversation = Conversation.find(message_conversation.conversation_id)
+
+        if @conversation.users.map(&:id).include? current_user.id
+            if @message
+                render turbo_stream: turbo_stream.prepend("messages:#{@conversation.id}", @message)
+            end
+        else
+            render json: { error: @message.errors.full_messages.join(', ') }, status: :unauthorized
+        end
+    end
+
+    def delete
+        redirect_login
     end
 
     private
 
-    def user_params
-        params.require(:user).permit(:ids => [])
-    end
-
-    def conversation_create_params
-        params.require(:conversation).permit(:name)
-    end
-
-    def conversation_params
-        params.require(:conversation).permit(:id)
-    end
-
     def message_params
-        params.require(:message).permit(:content)
-    end
-
-    def notify_recipient
-        conv_users = ConversationUser.where(:conversation => @conversation.id)
-        conv_users.each do |user|
-            next if user.eql?(current_user)
-            notification = NewMessageNotifier.with(message: @message.content, conversation: @message.conversation, type: "message")
-            notification.deliver(user)
-        end
+        params.require(:message).permit(:content, :conversation_id)
     end
 end
