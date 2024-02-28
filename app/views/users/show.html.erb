@@ -14,7 +14,7 @@
                         <%= render 'friends/deny', friend: @user, btnclass: 'btn btn-dark btn-sm btn-block', btntext: 'Remove friend' %>
                     <% end %>
                     <% if current_user.friend_with?(@user) %>
-                    <a href="" class="btn btn-dark btn-sm btn-block">Send a message</a>
+                        <%= render 'direct', user: current_user, btnclass: 'btn btn-dark btn-sm btn-block', btntext: 'Send a message' %>
                     <% end %>
                 <% end %>
                 <% if ( @user.id == current_user.id ) %>

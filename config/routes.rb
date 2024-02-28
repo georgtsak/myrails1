@@ -23,10 +23,11 @@ Rails.application.routes.draw do
   post "/messages/delete", to: "messages#delete"
   get "/messages/:id", to: "messages#read", as: 'messages'
 
+  get '/conversations/direct', to: 'conversations#direct'
   post '/conversations/create', to: 'conversations#create'
   post '/conversations/update', to: 'conversations#update'
   post '/conversations/delete', to: 'conversations#delete'
-  get '/conversations/:id', to: 'conversations#read', as: 'conversations'
+  get '/conversations/:id', to: 'conversations#read', as: 'conversation'
   post '/conversations/:id', to: 'conversations#read'
   get '/conversations', to: 'conversations#index'
 

@@ -44,4 +44,8 @@ class User < ApplicationRecord
   def add_friend(user)
     FriendRequests.create(friend_id: user.id)
   end
+
+  def find_direct_with(user)
+    self.conversations.direct.where(:conversation_users => { user_id: [self.id, user.id] } )
+  end
 end

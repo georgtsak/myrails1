@@ -19,13 +19,33 @@ class ConversationsController < ApplicationController
         @count = @conversations.count
     end
 
+    def direct
+        redirect_login
+
+        name_key = "%#{params[:name]}%"
+  
+        name_exists = !params[:name].blank?
+  
+        if name_exists
+            conversations_scope = current_user.conversations.direct.where("uid LIKE ?", name_key).all
+        else
+            conversations_scope = current_user.conversations.direct.all
+        end
+  
+        @search_name_value = params[:name]
+
+        @conversation = Conversation.build()
+        @pagy, @conversations = pagy(conversations_scope.order(created_at: :desc), items: 10)
+        @count = @conversations.count
+    end
+
     def read
         redirect_login
 
-        @contacts = current_user.friends
         @conversation = Conversation.find(params[:id]) or not_found
+        @current_user = current_user
 
-        if @conversation.users.map(&:id).include? current_user.id
+        if @conversation.user_exists?(current_user)
             @pagy, @messages = pagy_countless(@conversation.messages.order(created_at: :desc), items: 10)
             @users = @conversation.users
             @message = Message.new()
@@ -35,7 +55,6 @@ class ConversationsController < ApplicationController
             else
                 respond_to do |format|
                     format.html
-                    format.turbo_stream
                 end
             end
         else
@@ -46,7 +65,20 @@ class ConversationsController < ApplicationController
     def create
         redirect_login
 
+        @current_user = current_user
         @conversation = Conversation.build(uid: conversation_create_params[:uid])
+
+        p conversation_create_params[:direct] == true
+
+        if conversation_create_params[:direct]
+            @conversation.direct = true
+            @existing_conversation = current_user.find_direct_with(User.find(conversation_create_params[:users][0]))[0]
+
+            if @existing_conversation
+                redirect_to @existing_conversation
+                return
+            end
+        end
 
         conversation_create_params[:users].each do |user|
             tempUser = User.find(user)
@@ -72,6 +104,6 @@ class ConversationsController < ApplicationController
     private
 
     def conversation_create_params
-        params.require(:conversation).permit(:uid, :users => [])
+        params.require(:conversation).permit(:uid, :direct, :users => [])
     end
 end

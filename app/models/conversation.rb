@@ -6,4 +6,8 @@ class Conversation < ApplicationRecord
 
     scope :direct, -> { where(direct: true) }
     after_create_commit {broadcast_append_to "conversations"}
+
+    def user_exists?(user)
+        users.map(&:id).include? user.id
+    end
 end

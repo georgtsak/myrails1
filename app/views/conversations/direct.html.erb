@@ -4,9 +4,9 @@
     <div class="px-4 pt-0 pb-4 bg-dark">
         <div class="media align-items-end profile-header">
             <div class="media-body mb-5 text-white">
-                <h1 class="pt-4 mb-0">Conversations</h1>
-                <a href="/conversations/direct" class="btn btn-dark btn-sm btn-block">
-                  Direct conversations
+                <h1 class="pt-4 mb-0">Direct conversations</h1>
+                <a href="/conversations" class="btn btn-dark btn-sm btn-block">
+                  All conversations
                 </a>
                 <a href="#" class="btn btn-dark btn-sm btn-block" data-bs-toggle="modal" data-bs-target="#createConvModal">
                   New conversation
@@ -17,7 +17,7 @@
 
     <div class="bg-light p-4 d-flex justify-content-end text-center">
         <div class="search-block">
-          <% current_link = '/conversations/' %>
+          <% current_link = '/conversations/direct' %>
           <%= render partial: "search", locals: {searchlink: current_link, returnlink: current_link} %>
         </div>
         <ul class="list-inline mb-0">

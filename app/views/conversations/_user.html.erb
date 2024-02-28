@@ -3,6 +3,8 @@
         <div class="fw-semibold"><%=user.email%></div>
         <%=user.last_name%> <%=user.first_name%>
     </div>
+    <% if !@conversation.direct %>
     <span class="badge text-bg-primary rounded-pill" style="margin-right: 5px">DM</span>
     <span class="badge text-bg-danger rounded-pill">Kick</span>
+    <% end %>
 </li>

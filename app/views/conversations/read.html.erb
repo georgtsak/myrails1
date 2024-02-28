@@ -10,7 +10,14 @@ $('.messagescontainer').height($(window).height() - 300)
     <div class="px-4 pt-0 pb-4 bg-dark">
         <div class="media align-items-end profile-header">
             <div class="media-body mb-5 text-white">
-                <h1 class="pt-4 mb-0"><%=@conversation.uid %></h1>
+                <h1 class="pt-4 mb-0">
+                <% if !@conversation.direct %>
+                <%=@conversation.uid %>
+                <% else %>
+                <% current_conversant = @conversation.users.where.not(id: current_user.id).first %>
+                Direct messages with <%=current_conversant.last_name %> <%=current_conversant.first_name %>
+                <% end %>
+                </h1>
             </div>
         </div>
     </div>
