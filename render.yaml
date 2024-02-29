@@ -1,4 +1,9 @@
-services:
+databases:
+  - name: worknconnectrails
+    databaseName: worknconnectrails
+    user: worknconnectrails_user
+    plan: free
+
   - type: web
     name: WorkNConnect
     runtime: ruby
