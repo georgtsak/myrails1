@@ -1,5 +1,5 @@
 function subscribeForNotifications() {
-    notificationsSocket = new WebSocket('ws://localhost:3000/cable');
+    notificationsSocket = new WebSocket('ws://worknconnectrails.onrender.com/cable');
     notificationsSocket.onopen = function(event) {
         const msg = {
             command: 'subscribe',
@@ -10,7 +10,7 @@ function subscribeForNotifications() {
         notificationsSocket.send(JSON.stringify(msg));
     };
     notificationsSocket.onclose = function(event) {
-        console.log('Notifications socket is closed.');
+
     };
     notificationsSocket.onmessage = function(event) {
         const response = event.data
@@ -46,7 +46,6 @@ function subscribeForNotifications() {
         }
     };
     notificationsSocket.onerror = function(error) {
-        console.log('Notifications socket crashed.');
         console.log(error);
     };
 }
