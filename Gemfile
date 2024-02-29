@@ -75,3 +75,4 @@ gem "actioncable", "~> 7.1"
 gem "cable_ready", "~> 5.0"
 gem "pagy", "~> 7.0"
 gem 'omniauth-google-oauth2'
+gem 'omniauth-rails_csrf_protection'
