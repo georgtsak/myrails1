@@ -31,7 +31,12 @@
           <% if !current_user %>
             <a class="btn btn-outline-success" href="/login">Login</a>
           <% else %>
-            <a class="btn btn-outline-danger" href="/logout">Logout</a>
+          <%= button_to(
+            "Logout",
+            destroy_user_session_path,
+            method: :delete,
+            class: 'btn btn-outline-danger'
+          ) %>
           <% end %>
           </div>
         </div>

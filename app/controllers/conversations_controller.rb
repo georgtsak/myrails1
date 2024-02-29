@@ -69,8 +69,6 @@ class ConversationsController < ApplicationController
         @current_user = current_user
         @conversation = Conversation.build(uid: conversation_create_params[:uid])
 
-        p conversation_create_params[:direct] == true
-
         if conversation_create_params[:direct]
             @conversation.direct = true
             direct_user = User.find(conversation_create_params[:users][0])
