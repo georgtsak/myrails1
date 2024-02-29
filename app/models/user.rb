@@ -58,6 +58,6 @@ class User < ApplicationRecord
   end
 
   def find_direct_with(user)
-    self.conversations.direct.where(:conversation_users => { user_id: [self.id, user.id] } )
+    Conversation.direct.joins(:conversation_users).where(:conversation_users => { user_id: self.id, user_id: user.id} )
   end
 end
