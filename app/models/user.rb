@@ -13,6 +13,10 @@ class User < ApplicationRecord
 
   scope :all_except, ->(user) { where.not(id: user) }
 
+  def self.from_google(u)
+    create_with(uid: u[:uid], provider: 'google', password: Devise.friendly_token[0, 20]).find_or_create_by!(email: u[:email])
+  end
+
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email
