@@ -1,5 +1,5 @@
 function subscribeForNotifications() {
-    notificationsSocket = new WebSocket('ws://worknconnectrails.onrender.com/cable');
+    notificationsSocket = new WebSocket('wss://worknconnectrails.onrender.com/cable');
     notificationsSocket.onopen = function(event) {
         const msg = {
             command: 'subscribe',

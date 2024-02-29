@@ -7,8 +7,12 @@
         <% if !conversation.direct %>
         <div class="fw-bold"><%=conversation.uid %></div>
         <% else %>
-        <% current_conversant = conversation.users.where.not(id: @current_user.id).first %>
-        <div class="fw-bold">Direct messages with <%=current_conversant.last_name %> <%=current_conversant.first_name %></div>
+        <% if @current_user %>
+            <% current_conversant = conversation.users.where.not(id: @current_user.id).first %>
+            <div class="fw-bold">Direct messages with <%=current_conversant.last_name %> <%=current_conversant.first_name %></div>
+            <% else %>
+            <div class="fw-bold">Direct messages</div>
+            <% end %>
         <% end %>
         <% if last_message %>
         <%= last_message.content %>
