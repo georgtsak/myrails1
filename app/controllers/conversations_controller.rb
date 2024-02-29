@@ -69,14 +69,10 @@ class ConversationsController < ApplicationController
         @current_user = current_user
         @conversation = Conversation.build(uid: conversation_create_params[:uid])
 
-        p conversation_create_params[:direct] == true
-
         if conversation_create_params[:direct]
             @conversation.direct = true
             direct_user = User.find(conversation_create_params[:users][0])
             @existing_conversation = current_user.find_direct_with(direct_user)[0]
-
-            p direct_user
 
             if @existing_conversation
                 redirect_to @existing_conversation
